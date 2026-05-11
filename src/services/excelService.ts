@@ -59,7 +59,8 @@ export function exportToExcel(data: ExamData) {
     }
 
     // Reference pattern: 1 row per option (A-E)
-    const displayOptions = [...options];
+    // Slicing to 4 to ensure only A-D are filled if more exist, E remains empty as requested
+    const displayOptions = options.slice(0, 4);
     while (displayOptions.length < 5) displayOptions.push('');
 
     displayOptions.forEach((opt, oIdx) => {
@@ -75,7 +76,7 @@ export function exportToExcel(data: ExamData) {
         '', // PERNYATAAN (G)
         oIdx === 0 ? jenis : '', // JENIS (H)
         oIdx === 0 ? keyLabel : '', // KUNCI (I)
-        oIdx === 0 ? 5 : '' // OPSI PER SOAL (J)
+        oIdx === 0 ? 4 : '' // OPSI PER SOAL (J)
       ];
       
       rows.push(row);

@@ -108,12 +108,30 @@ export function ExamPaper({ data, isLoading, viewMode }: ExamPaperProps) {
           )}
         </div>
 
-        {/* Paper Container (Simulating A4) */}
+        {/* Paper Container (Optimized for Multi-page PDF) */}
         <motion.div 
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="bg-white rounded-sm shadow-2xl p-12 flex flex-col border border-slate-200 relative min-h-[1122px] w-[794px] mx-auto print:shadow-none print:border-none print:rounded-none print:p-0 font-serif"
+          className="bg-white rounded-sm shadow-2xl p-12 flex flex-col border border-slate-200 relative w-[794px] mx-auto print:shadow-none print:border-none print:rounded-none print:p-0 print:w-full font-serif overflow-visible mb-20"
         >
+          <style>{`
+            @media print {
+              @page {
+                size: A4;
+                margin: 15mm;
+              }
+              body {
+                background: white;
+              }
+              .no-print {
+                display: none !important;
+              }
+              .print-break-inside-avoid {
+                break-inside: avoid;
+                page-break-inside: avoid;
+              }
+            }
+          `}</style>
           {/* Reference Header Style (KOP) */}
           <div className="flex items-center gap-4 pb-2 mb-0">
             {identity.logo ? (
@@ -171,7 +189,7 @@ export function ExamPaper({ data, isLoading, viewMode }: ExamPaperProps) {
             {/* Questions Section */}
             <div className="space-y-6">
               {questions.map((q, idx) => (
-                <div key={idx} className="space-y-3">
+                <div key={idx} className="space-y-3 print-break-inside-avoid pb-4">
                   <div className="flex items-start gap-4">
                     <span className="text-sm font-bold text-slate-900 w-4 shrink-0">{idx + 1}.</span>
                     <div className="prose prose-slate prose-sm max-w-none text-slate-900 font-normal leading-relaxed pr-8">

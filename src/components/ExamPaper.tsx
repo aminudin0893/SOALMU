@@ -182,8 +182,9 @@ export function ExamPaper({ data, isLoading, viewMode }: ExamPaperProps) {
                   {q.options && q.options.length > 0 && (
                     <div className="grid grid-cols-2 gap-x-12 gap-y-2 pl-8 max-w-[600px]">
                       {q.options.map((option, oIdx) => (
-                        <div key={oIdx} className="flex items-start gap-1 text-[13px] text-slate-900 uppercase">
-                          <span className="font-medium shrink-0">{String.fromCharCode(65 + oIdx)}. {option}</span>
+                        <div key={oIdx} className="flex items-start gap-1 text-[13px] text-slate-900">
+                          <span className="font-normal shrink-0">{String.fromCharCode(65 + oIdx)}.</span>
+                          <span className="font-normal leading-tight">{option}</span>
                         </div>
                       ))}
                     </div>

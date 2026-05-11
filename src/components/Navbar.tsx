@@ -14,7 +14,7 @@ export function Navbar() {
         </div>
         <div className="flex flex-col">
           <h1 className="text-lg font-bold text-slate-900 tracking-tight flex items-center leading-none">
-            BuatinSoal <span className="text-blue-600 ml-1">AI</span>
+            BuatinSoal <span className="text-blue-600 ml-1">MU</span>
           </h1>
           <p className="text-[10px] text-slate-400 font-medium uppercase tracking-widest mt-1">
             Kurikulum Merdeka Edition

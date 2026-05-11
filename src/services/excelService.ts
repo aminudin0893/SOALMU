@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import * as XLSX from 'xlsx';
+import XLSX from 'xlsx-js-style';
 import { ExamData, QuestionType } from '../types';
 
 export function exportToExcel(data: ExamData) {
@@ -38,7 +38,28 @@ export function exportToExcel(data: ExamData) {
     let jenis = 1; 
     if (q.options === undefined || q.options.length === 0) jenis = 2;
 
+    // Start row tracking for merges
     const startRowIdx = currentRowIdx;
+
+    // Find key label (A, B, C...)
+    let keyLabel = q.correctAnswer;
+    if (options.length > 0) {
+      // Try to find if correctAnswer is the full text
+      const correctIdx = options.findIndex(opt => 
+        opt.trim().toLowerCase() === q.correctAnswer.trim().toLowerCase()
+      );
+      
+      if (correctIdx !== -1) {
+        keyLabel = String.fromCharCode(65 + correctIdx);
+      } else {
+        // If not found, maybe it already has "A. Text" or just "A"
+        if (q.correctAnswer.length > 1 && q.correctAnswer.includes('.')) {
+          keyLabel = q.correctAnswer.split('.')[0].trim();
+        } else if (q.correctAnswer.length === 1) {
+          keyLabel = q.correctAnswer.toUpperCase();
+        }
+      }
+    }
 
     options.forEach((opt, oIdx) => {
       const optionLabel = String.fromCharCode(65 + oIdx); // A, B, C, D...
@@ -52,7 +73,7 @@ export function exportToExcel(data: ExamData) {
         opt, // PILIHAN (F)
         '', // PERNYATAAN (G)
         oIdx === 0 ? jenis : '', // JENIS (H)
-        oIdx === 0 ? q.correctAnswer : '', // KUNCI (I)
+        oIdx === 0 ? keyLabel : '', // KUNCI (I)
         oIdx === 0 ? optionCount : '' // OPSI PER SOAL (J)
       ];
       
@@ -83,6 +104,38 @@ export function exportToExcel(data: ExamData) {
   
   // Set Merges
   worksheet['!merges'] = merges;
+
+  // Add borders and styling to all cells
+  const range = XLSX.utils.decode_range(worksheet['!ref'] || 'A1');
+  for (let R = range.s.r; R <= range.e.r; ++R) {
+    for (let C = range.s.c; C <= range.e.c; ++C) {
+      const cell_address = { c: C, r: R };
+      const cell_ref = XLSX.utils.encode_cell(cell_address);
+      if (!worksheet[cell_ref]) worksheet[cell_ref] = { t: 's', v: '' };
+      
+      const style: any = {
+        border: {
+          top: { style: "thin", color: { rgb: "000000" } },
+          bottom: { style: "thin", color: { rgb: "000000" } },
+          left: { style: "thin", color: { rgb: "000000" } },
+          right: { style: "thin", color: { rgb: "000000" } }
+        },
+        alignment: {
+          vertical: "center",
+          wrapText: true
+        }
+      };
+
+      // Header styling
+      if (R === 0) {
+        style.fill = { fgColor: { rgb: "FFFF00" } }; // Yellow
+        style.font = { bold: true };
+        style.alignment.horizontal = "center";
+      }
+
+      worksheet[cell_ref].s = style;
+    }
+  }
 
   // Set Column Widths (Approximation in characters)
   worksheet['!cols'] = [

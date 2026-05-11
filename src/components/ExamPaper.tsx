@@ -117,23 +117,23 @@ export function ExamPaper({ data, isLoading, viewMode }: ExamPaperProps) {
           {/* Reference Header Style (KOP) */}
           <div className="flex items-center gap-4 pb-2 mb-0">
             {identity.logo ? (
-              <img src={identity.logo} alt="Logo" className="w-[100px] h-[100px] object-contain flex-shrink-0" />
+              <img src={identity.logo} alt="Logo" className="w-[110px] h-[110px] object-contain flex-shrink-0" />
             ) : (
-              <div className="w-[100px] h-[100px] bg-slate-100 flex items-center justify-center text-slate-300 flex-shrink-0">
+              <div className="w-[110px] h-[110px] bg-slate-100 flex items-center justify-center text-slate-300 flex-shrink-0">
                 <GraduationCap className="w-12 h-12" />
               </div>
             )}
-            <div className="flex-1 text-center font-bold">
-              <h3 className="text-[13px] uppercase leading-tight tracking-tight">MAJELIS PENDIDIKAN DASAR MENENGAH DAN PENDIDIKAN NON FORMAL</h3>
-              <h3 className="text-[13px] uppercase leading-tight tracking-tight">PIMPINAN DAERAH MUHAMMADIYAH KOTA PROBOLINGGO</h3>
-              <h1 className="text-xl uppercase tracking-normal mt-0.5 mb-0.5">{identity.schoolName || 'SMP MUHAMMADIYAH 1 KOTA PROBOLINGGO'}</h1>
-              <p className="text-[12px] uppercase mb-0.5">TERAKREDITASI A</p>
-              <div className="text-[10px] font-normal text-slate-800 leading-tight">
+            <div className="flex-1 text-center text-slate-900">
+              <h3 className="text-[14px] font-bold uppercase leading-tight tracking-tight">MAJELIS PENDIDIKAN DASAR MENENGAH DAN PENDIDIKAN NON FORMAL</h3>
+              <h3 className="text-[14px] font-bold uppercase leading-tight tracking-tight">PIMPINAN DAERAH MUHAMMADIYAH KOTA PROBOLINGGO</h3>
+              <h1 className="text-xl font-black uppercase tracking-normal mt-1 mb-1">{identity.schoolName || 'SMP MUHAMMADIYAH 1 KOTA PROBOLINGGO'}</h1>
+              <p className="text-[13px] font-bold uppercase mb-1">TERAKREDITASI A</p>
+              <div className="text-[10px] font-medium leading-tight">
                 {identity.schoolAddress && <span>{identity.schoolAddress} </span>}
-                {identity.schoolEmail && <span>Email: <span className="text-blue-600 underline">{identity.schoolEmail}</span> </span>}
+                {identity.schoolEmail && <span>Email: <span className="text-blue-600 underline font-semibold">{identity.schoolEmail}</span> </span>}
                 <br />
                 {identity.schoolPhone && <span>Telp/fax. {identity.schoolPhone} </span>}
-                {identity.schoolWebsite && <span>Website: {identity.schoolWebsite}</span>}
+                {identity.schoolWebsite && <span>Website: <span className="font-semibold">{identity.schoolWebsite}</span></span>}
               </div>
             </div>
           </div>
@@ -144,21 +144,21 @@ export function ExamPaper({ data, isLoading, viewMode }: ExamPaperProps) {
           <h2 className="text-center font-bold text-base uppercase mb-4 tracking-normal">MATA PELAJARAN: {identity.subject}</h2>
 
           <div className="bg-[#C5D1EB] border-2 border-slate-900 p-2.5 text-center mb-6">
-            <h2 className="text-sm font-bold uppercase tracking-widest">{identity.examType || 'ASESMEN SUMATIF'}</h2>
+            <h2 className="text-sm font-black uppercase tracking-widest">{identity.examType || 'ASESMEN SUMATIF'}</h2>
           </div>
 
           {/* Student Info Table */}
-          <div className="grid grid-cols-12 border-2 border-slate-900 mb-8 text-[12px] font-bold">
+          <div className="grid grid-cols-12 border-2 border-slate-900 mb-8 text-[12px]">
             <div className="col-span-6 p-2 border-r-2 border-slate-900 flex items-center">
-              <span className="mr-2 shrink-0">Nama:</span>
-              <div className="flex-1 border-b border-dotted border-slate-500 h-4 min-w-[200px]"></div>
+              <span className="font-bold mr-2 shrink-0">Nama:</span>
+              <div className="flex-1 border-b border-dotted border-slate-500 h-4"></div>
             </div>
             <div className="col-span-3 p-2 border-r-2 border-slate-900 flex items-center">
-              <span className="mr-2 shrink-0">Kelas:</span>
+              <span className="font-bold mr-2 shrink-0">Kelas:</span>
               <div className="flex-1 border-b border-dotted border-slate-500 h-4"></div>
             </div>
             <div className="col-span-3 p-2 flex items-center">
-              <span className="mr-2 shrink-0">Tanggal:</span>
+              <span className="font-bold mr-2 shrink-0">Tanggal:</span>
               <div className="flex-1 border-b border-dotted border-slate-500 h-4"></div>
             </div>
           </div>
@@ -180,9 +180,9 @@ export function ExamPaper({ data, isLoading, viewMode }: ExamPaperProps) {
                   </div>
                   
                   {q.options && q.options.length > 0 && (
-                    <div className="grid grid-cols-2 gap-x-12 gap-y-2 pl-8">
+                    <div className="grid grid-flow-col grid-rows-2 gap-x-12 gap-y-2 pl-8 max-w-[500px]">
                       {q.options.map((option, oIdx) => (
-                        <div key={oIdx} className="flex items-start gap-3 text-[13px] text-slate-900">
+                        <div key={oIdx} className="flex items-start gap-1 text-[13px] text-slate-900">
                           <span className="font-normal shrink-0">{String.fromCharCode(65 + oIdx)}. {option}</span>
                         </div>
                       ))}

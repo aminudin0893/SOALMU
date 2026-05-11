@@ -72,7 +72,7 @@ export function exportToExcel(data: ExamData) {
         '', // PERNYATAAN (G)
         oIdx === 0 ? jenis : '', // JENIS (H)
         oIdx === 0 ? keyLabel : '', // KUNCI (I)
-        oIdx === 0 ? optionCount : '' // OPSI PER SOAL (J)
+        oIdx === 0 ? 4 : '' // OPSI PER SOAL (J)
       ];
       
       rows.push(row);

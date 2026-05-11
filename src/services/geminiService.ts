@@ -19,20 +19,25 @@ export async function generateQuestions(
 
   const ai = new GoogleGenAI({ apiKey });
 
-  const prompt = `Generate exam questions for the following context:
-  Subject: ${identity.subject}
-  Grade: ${identity.grade}
-  Phase: ${identity.phase}
-  Academic Year: ${identity.academicYear}
-  Topics: ${identity.topics.join(", ")}
-  Cognitive Levels: ${identity.levels.join(", ")}
-  Question Type: ${type}
-  Number of Questions: ${identity.questionCount}
-  Teacher: ${identity.teacherName}
+  const prompt = `Anda adalah pakar pembuat soal Kurikulum Merdeka. 
+  Buatlah soal ujian yang SANGAT SPESIFIK untuk mata pelajaran berikut:
+  
+  MATA PELAJARAN: ${identity.subject}
+  KELAS: ${identity.grade}
+  FASE: ${identity.phase}
+  TAHUN PELAJARAN: ${identity.academicYear}
+  TOPIK/MATERI: ${identity.topics.join(", ")}
+  LEVEL KOGNITIF: ${identity.levels.join(", ")}
+  TIPE SOAL: ${type}
+  JUMLAH SOAL: ${identity.questionCount}
+  GURU: ${identity.teacherName}
 
-  Ensure the questions follow the 'Kurikulum Merdeka' guidelines. 
-  Provide the questions and a 'Kisi-Kisi' (table of specifications) for the teacher. 
-  All content must be in Bahasa Indonesia.`;
+  INSTRUKSI KHUSUS:
+  1. Konten soal HARUS sesuai dengan Mata Pelajaran ${identity.subject}. JANGAN membuat soal di luar konteks subjek ini.
+  2. Gunakan peristilahan yang tepat sesuai standar Kurikulum Merdeka.
+  3. Berikan 'Kisi-Kisi' yang mendetail untuk setiap butir soal.
+  4. Semua teks harus dalam Bahasa Indonesia yang formal dan benar.
+  5. Jika Tipe Soal adalah 'Pilihan Ganda', sertakan minimal 4 atau 5 opsi jawaban (A, B, C, D, E) sesuai jenjang kelas.`;
 
   try {
     const response = await ai.models.generateContent({

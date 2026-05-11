@@ -13,14 +13,14 @@ import { Edit3, Eye } from 'lucide-react';
 
 export default function App() {
   const [identity, setIdentity] = useState<ExamIdentity>({
-    subject: 'IPA',
+    subject: 'Pendidikan Agama Islam',
     grade: '7',
     phase: 'D',
     academicYear: '2024/2025',
-    topics: ['Besaran dan Satuan'],
+    topics: ['Sejarah Kebudayaan Islam'],
     levels: [CognitiveLevel.C2],
     questionCount: 5,
-    teacherName: 'Rudy Pratama, S.Pd'
+    teacherName: 'Aminudin, S.Pd.'
   });
 
   const [selectedType, setSelectedType] = useState<QuestionType>(QuestionType.MULTIPLE_CHOICE);

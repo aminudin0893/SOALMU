@@ -34,6 +34,13 @@ export interface ExamIdentity {
   levels: CognitiveLevel[];
   questionCount: number;
   teacherName: string;
+  schoolName?: string;
+  schoolAddress?: string;
+  schoolEmail?: string;
+  schoolPhone?: string;
+  schoolWebsite?: string;
+  logo?: string; // Base64 logo
+  examType?: string; // e.g., "ASESMEN SUMATIF"
 }
 
 export interface Question {

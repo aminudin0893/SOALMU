@@ -18,7 +18,14 @@ import {
   Key, 
   Zap,
   Plus,
-  Trash2
+  Trash2,
+  Upload,
+  UserCheck,
+  UserCircle,
+  Building,
+  Mail,
+  Phone,
+  Globe
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -36,6 +43,8 @@ interface SidebarProps {
   apiKey: string;
   onApiKeyChange: (key: string) => void;
   onSaveApiKey: () => void;
+  viewMode: 'teacher' | 'student';
+  onViewModeChange: (mode: 'teacher' | 'student') => void;
 }
 
 export function Sidebar({
@@ -47,9 +56,13 @@ export function Sidebar({
   onModeChange,
   onGenerate,
   isLoading,
+  activeView,
+  onViewChange,
   apiKey,
   onApiKeyChange,
-  onSaveApiKey
+  onSaveApiKey,
+  viewMode,
+  onViewModeChange
 }: SidebarProps) {
   const [newTopic, setNewTopic] = useState('');
 
@@ -85,9 +98,56 @@ export function Sidebar({
     }
   };
 
+  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        alert("Ukuran logo maksimal 2MB");
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        onIdentityChange({
+          ...identity,
+          logo: reader.result as string
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <aside className="w-full lg:w-80 border-r border-slate-200 bg-white flex flex-col h-full shrink-0">
       <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
+        
+        {/* Toggle Mode */}
+        <div className="space-y-4">
+          <label className="flex items-center gap-2 text-sm font-bold text-slate-800 uppercase tracking-wide">
+            <UserCircle className="w-4 h-4 text-emerald-600" /> Mode Tampilan
+          </label>
+          <div className="flex bg-slate-100 p-1 rounded-xl">
+            <button
+              onClick={() => onViewModeChange('teacher')}
+              className={`flex-1 py-2 text-[10px] font-bold uppercase rounded-lg transition-all flex items-center justify-center gap-2 ${
+                viewMode === 'teacher'
+                  ? 'bg-blue-600 text-white shadow-lg'
+                  : 'text-slate-500 hover:text-slate-700'
+              }`}
+            >
+              <UserCheck className="w-3 h-3" /> Guru
+            </button>
+            <button
+              onClick={() => onViewModeChange('student')}
+              className={`flex-1 py-2 text-[10px] font-bold uppercase rounded-lg transition-all flex items-center justify-center gap-2 ${
+                viewMode === 'student'
+                  ? 'bg-emerald-600 text-white shadow-lg'
+                  : 'text-slate-500 hover:text-slate-700'
+              }`}
+            >
+              <UserCircle className="w-3 h-3" /> Siswa
+            </button>
+          </div>
+        </div>
         
         {/* Section: API Key */}
         <div className="space-y-4">
@@ -108,6 +168,65 @@ export function Sidebar({
             >
               Simpan API Key
             </button>
+          </div>
+        </div>
+
+        {/* Section: Sekolah */}
+        <div className="space-y-4">
+          <label className="flex items-center gap-2 text-sm font-bold text-slate-800 uppercase tracking-wide">
+            <Building className="w-4 h-4 text-blue-600" /> Identitas Sekolah
+          </label>
+          <div className="space-y-3">
+            <div className="flex flex-col items-center gap-3 p-4 border border-dashed border-slate-200 rounded-xl bg-slate-50/50">
+              {identity.logo ? (
+                <div className="relative group">
+                  <img src={identity.logo} alt="School Logo" className="h-16 w-16 object-contain" />
+                  <button 
+                    onClick={() => onIdentityChange({ ...identity, logo: undefined })}
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow-md opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <Trash2 className="w-3 h-3" />
+                  </button>
+                </div>
+              ) : (
+                <label className="flex flex-col items-center gap-2 cursor-pointer hover:text-blue-600 transition-colors">
+                  <Upload className="w-6 h-6 text-slate-400" />
+                  <span className="text-[10px] font-bold uppercase">Upload Logo Sekolah</span>
+                  <input type="file" accept="image/*" className="hidden" onChange={handleLogoUpload} />
+                </label>
+              )}
+            </div>
+            
+            <input
+              type="text"
+              placeholder="Nama Sekolah..."
+              value={identity.schoolName || ''}
+              onChange={(e) => onIdentityChange({ ...identity, schoolName: e.target.value })}
+              className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-md text-sm outline-none focus:border-blue-500 transition-all shadow-sm"
+            />
+            <input
+              type="text"
+              placeholder="Alamat Sekolah..."
+              value={identity.schoolAddress || ''}
+              onChange={(e) => onIdentityChange({ ...identity, schoolAddress: e.target.value })}
+              className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-md text-sm outline-none focus:border-blue-500 transition-all shadow-sm"
+            />
+            <div className="grid grid-cols-2 gap-2">
+              <input
+                type="text"
+                placeholder="Email..."
+                value={identity.schoolEmail || ''}
+                onChange={(e) => onIdentityChange({ ...identity, schoolEmail: e.target.value })}
+                className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-md text-[11px] outline-none focus:border-blue-500 transition-all shadow-sm"
+              />
+              <input
+                type="text"
+                placeholder="Telp/Fax..."
+                value={identity.schoolPhone || ''}
+                onChange={(e) => onIdentityChange({ ...identity, schoolPhone: e.target.value })}
+                className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-md text-[11px] outline-none focus:border-blue-500 transition-all shadow-sm"
+              />
+            </div>
           </div>
         </div>
 
@@ -148,6 +267,16 @@ export function Sidebar({
                   placeholder="D, E, F..."
                 />
               </div>
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-[11px] font-bold text-slate-500 uppercase">Jenis Ujian</label>
+              <input
+                type="text"
+                value={identity.examType || ''}
+                onChange={(e) => onIdentityChange({ ...identity, examType: e.target.value })}
+                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-md text-sm outline-none focus:border-blue-500 transition-all shadow-sm"
+                placeholder="ASESMEN SUMATIF / PENILAIAN HARIAN"
+              />
             </div>
             <div className="space-y-1.5">
               <label className="text-[11px] font-bold text-slate-500 uppercase">Nama Guru</label>

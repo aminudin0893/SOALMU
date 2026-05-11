@@ -20,12 +20,19 @@ export default function App() {
     topics: ['Sejarah Kebudayaan Islam'],
     levels: [CognitiveLevel.C2],
     questionCount: 5,
-    teacherName: 'Aminudin, S.Pd.'
+    teacherName: 'Aminudin, S.Pd.',
+    schoolName: 'SMP MUHAMMADIYAH 1 KOTA PROBOLINGGO',
+    schoolAddress: 'Jl. Mayjend Panjaitan 73 Kota Probolinggo',
+    schoolEmail: 'smp_muh_prob@yahoo.co.id',
+    schoolPhone: '0335-422307',
+    schoolWebsite: 'smpmusapro.sch.id',
+    examType: 'ASESMEN SUMATIF'
   });
 
   const [selectedType, setSelectedType] = useState<QuestionType>(QuestionType.MULTIPLE_CHOICE);
   const [selectedMode, setSelectedMode] = useState<ExamMode>(ExamMode.BIASA);
   const [activeView, setActiveView] = useState<'input' | 'preview'>('input');
+  const [viewMode, setViewMode] = useState<'teacher' | 'student'>('teacher');
   
   const [apiKey, setApiKey] = useState(() => {
     // Priority: Local Storage -> Environment
@@ -117,12 +124,14 @@ export default function App() {
             apiKey={apiKey}
             onApiKeyChange={setApiKey}
             onSaveApiKey={handleSaveApiKey}
+            viewMode={viewMode}
+            onViewModeChange={setViewMode}
           />
         </div>
         
         {/* Main Content / Preview Area */}
         <div className={`${activeView === 'preview' ? 'flex flex-1' : 'hidden'} lg:flex flex-1 flex-col overflow-hidden`}>
-          <ExamPaper data={examData} isLoading={isLoading} activeView={activeView} />
+          <ExamPaper data={examData} isLoading={isLoading} activeView={activeView} viewMode={viewMode} />
         </div>
       </main>
 

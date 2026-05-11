@@ -14,7 +14,9 @@ import {
   User,
   GraduationCap,
   Sparkles,
-  FileSpreadsheet
+  FileSpreadsheet,
+  UserCheck,
+  UserCircle
 } from 'lucide-react';
 import { motion } from 'motion/react';
 import ReactMarkdown from 'react-markdown';
@@ -24,9 +26,10 @@ interface ExamPaperProps {
   data: ExamData | null;
   isLoading: boolean;
   activeView: string;
+  viewMode: 'teacher' | 'student';
 }
 
-export function ExamPaper({ data, isLoading }: ExamPaperProps) {
+export function ExamPaper({ data, isLoading, viewMode }: ExamPaperProps) {
   if (isLoading) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-10 text-center space-y-6">
@@ -92,57 +95,93 @@ export function ExamPaper({ data, isLoading }: ExamPaperProps) {
           </div>
         </div>
 
+        {/* Mode Indicator - UI Only */}
+        <div className="absolute top-4 right-4 no-print flex gap-2">
+          {viewMode === 'teacher' ? (
+            <div className="flex items-center gap-1.5 px-3 py-1 bg-blue-600 text-white rounded-full text-[10px] font-bold shadow-lg">
+              <UserCheck className="w-3 h-3" /> MODE GURU
+            </div>
+          ) : (
+            <div className="flex items-center gap-1.5 px-3 py-1 bg-emerald-600 text-white rounded-full text-[10px] font-bold shadow-lg">
+              <UserCircle className="w-3 h-3" /> MODE SISWA
+            </div>
+          )}
+        </div>
+
         {/* Paper Container */}
         <motion.div 
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="bg-white rounded-sm shadow-2xl p-12 flex flex-col border border-slate-200 relative min-h-[900px] print:shadow-none print:border-none print:rounded-none print:p-0"
+          className="bg-white rounded-sm shadow-2xl p-12 flex flex-col border border-slate-200 relative min-h-[900px] print:shadow-none print:border-none print:rounded-none print:p-0 font-serif"
         >
-          {/* Exam Header */}
-          <div className="text-center border-b-4 border-double border-slate-900 pb-6 mb-8">
-            <h1 className="text-xl font-bold uppercase tracking-tight leading-tight">Penilaian Harian Semester Ganjil</h1>
-            <h2 className="text-lg font-bold uppercase tracking-tighter">SMP NEGERI INDONESIA</h2>
-            <p className="text-[11px] text-slate-500 font-medium mt-1">Tahun Pelajaran {identity.academicYear}</p>
-          </div>
-
-          {/* Identity Table-style */}
-          <div className="grid grid-cols-2 text-[12px] mb-10 gap-x-12 gap-y-2 font-medium border-b border-slate-100 pb-6">
-            <div className="flex justify-between border-b border-slate-50 pb-1">
-              <span className="text-slate-500 uppercase text-[10px] font-bold">Mata Pelajaran</span>
-              <span className="font-bold">: {identity.subject}</span>
-            </div>
-            <div className="flex justify-between border-b border-slate-50 pb-1">
-              <span className="text-slate-500 uppercase text-[10px] font-bold">Nama Guru</span>
-              <span className="font-bold">: {identity.teacherName}</span>
-            </div>
-            <div className="flex justify-between border-b border-slate-50 pb-1">
-              <span className="text-slate-500 uppercase text-[10px] font-bold">Kelas / Fase</span>
-              <span className="font-bold">: {identity.grade} / {identity.phase}</span>
-            </div>
-            <div className="flex justify-between border-b border-slate-50 pb-1">
-              <span className="text-slate-500 uppercase text-[10px] font-bold">Nama Siswa</span>
-              <span className="font-bold border-b border-slate-300 flex-1 ml-2"></span>
+          {/* Reference Header Style */}
+          <div className="flex items-center gap-6 pb-4 mb-2 border-b-2 border-slate-900 border-double">
+            {identity.logo ? (
+              <img src={identity.logo} alt="Logo" className="w-24 h-24 object-contain" />
+            ) : (
+              <div className="w-24 h-24 bg-slate-100 flex items-center justify-center text-slate-300">
+                <GraduationCap className="w-12 h-12" />
+              </div>
+            )}
+            <div className="flex-1 text-center">
+              <h3 className="text-[12px] font-bold uppercase leading-tight tracking-tight">MAJELIS PENDIDIKAN DASAR MENENGAH DAN PENDIDIKAN NON FORMAL</h3>
+              <h3 className="text-[12px] font-bold uppercase leading-tight tracking-tight">PIMPINAN DAERAH MUHAMMADIYAH KOTA PROBOLINGGO</h3>
+              <h1 className="text-xl font-bold uppercase tracking-tight mt-1 mb-1">{identity.schoolName || 'NAMA SEKOLAH ANDA'}</h1>
+              <p className="text-[10px] font-bold uppercase mb-1">TERAKREDITASI A</p>
+              <div className="text-[9px] font-medium text-slate-600 leading-tight">
+                {identity.schoolAddress && <span>{identity.schoolAddress} </span>}
+                {identity.schoolEmail && <span>Email: <span className="text-blue-600 underline">{identity.schoolEmail}</span> </span>}
+                {identity.schoolPhone && <span>Telp/fax. {identity.schoolPhone} </span>}
+                {identity.schoolWebsite && <span>Website: {identity.schoolWebsite}</span>}
+              </div>
             </div>
           </div>
 
-          <div className="flex-1 space-y-10">
+          <div className="border-t-[1px] border-slate-900 mb-6"></div>
+
+          <h2 className="text-center font-bold text-sm uppercase mb-4 tracking-widest border-b-[1px] border-slate-900 pb-2">MATA PELAJARAN: {identity.subject}</h2>
+
+          <div className="bg-blue-100/30 border border-slate-900 p-3 text-center mb-6">
+            <h2 className="text-sm font-bold uppercase tracking-widest">{identity.examType || 'ASESMEN SUMATIF'}</h2>
+          </div>
+
+          {/* Student Info Table */}
+          <div className="grid grid-cols-3 border border-slate-900 mb-8 text-[11px]">
+            <div className="p-2 border-r border-slate-900 flex items-center">
+              <span className="font-medium mr-2">Nama:</span>
+              <div className="flex-1 border-b border-dotted border-slate-500 mt-2"></div>
+            </div>
+            <div className="p-2 border-r border-slate-900 flex items-center">
+              <span className="font-medium mr-2">Kelas:</span>
+              <div className="flex-1 border-b border-dotted border-slate-500 mt-2"></div>
+            </div>
+            <div className="p-2 flex items-center">
+              <span className="font-medium mr-2">Tanggal:</span>
+              <div className="flex-1 border-b border-dotted border-slate-500 mt-2"></div>
+            </div>
+          </div>
+
+          <div className="mb-4">
+            <h3 className="text-xs font-black uppercase border-b border-slate-900 pb-1 mb-4">BAGIAN : PENILAIAN PILIHAN GANDA</h3>
+          </div>
+
+          <div className="flex-1 space-y-8">
             {/* Questions Section */}
-            <div className="space-y-8">
+            <div className="space-y-6">
               {questions.map((q, idx) => (
                 <div key={idx} className="space-y-3">
-                  <div className="flex items-start gap-3">
-                    <span className="text-sm font-bold text-slate-900 w-6 shrink-0">{idx + 1}.</span>
-                    <div className="prose prose-slate prose-sm max-w-none text-slate-900 font-medium leading-relaxed">
+                  <div className="flex items-start gap-4">
+                    <span className="text-sm font-bold text-slate-900 w-4 shrink-0">{idx + 1}.</span>
+                    <div className="prose prose-slate prose-sm max-w-none text-slate-900 font-bold leading-relaxed">
                       <ReactMarkdown>{q.text}</ReactMarkdown>
                     </div>
                   </div>
                   
                   {q.options && q.options.length > 0 && (
-                    <div className="grid grid-cols-1 gap-2 pl-9">
+                    <div className="grid grid-flow-col grid-rows-2 gap-x-12 gap-y-1 pl-8">
                       {q.options.map((option, oIdx) => (
-                        <div key={oIdx} className="flex items-start gap-4 text-sm text-slate-700">
-                          <span className="font-bold w-4">{String.fromCharCode(65 + oIdx)}.</span>
-                          <span>{option}</span>
+                        <div key={oIdx} className="flex items-start gap-3 text-[12px] text-slate-800">
+                          <span className="font-normal shrink-0">{String.fromCharCode(65 + oIdx)}. {option}</span>
                         </div>
                       ))}
                     </div>
@@ -160,28 +199,30 @@ export function ExamPaper({ data, isLoading }: ExamPaperProps) {
         </motion.div>
 
         {/* Answer Key Separator for non-print view */}
-        <div className="no-print border-t border-slate-200 pt-12 space-y-8">
-          <div className="flex items-center gap-4">
-            <div className="h-[1px] flex-1 bg-slate-200"></div>
-            <h2 className="text-xs font-bold text-slate-400 uppercase tracking-widest">Kunci Jawaban & Pembahasan</h2>
-            <div className="h-[1px] flex-1 bg-slate-200"></div>
-          </div>
-          
-          <div className="grid grid-cols-1 gap-4">
-            {questions.map((q, idx) => (
-              <div key={idx} className="p-4 bg-white rounded-xl border border-slate-200 space-y-2">
-                <div className="flex justify-between items-center">
-                  <span className="text-[10px] font-bold text-blue-600 uppercase">Butir Soal {idx + 1}</span>
-                  <span className="text-[10px] font-bold bg-slate-100 px-2 py-0.5 rounded text-slate-500 uppercase">{q.cognitiveLevel}</span>
+        {viewMode === 'teacher' && (
+          <div className="no-print border-t border-slate-200 pt-12 space-y-8">
+            <div className="flex items-center gap-4">
+              <div className="h-[1px] flex-1 bg-slate-200"></div>
+              <h2 className="text-xs font-bold text-slate-400 uppercase tracking-widest">Kunci Jawaban & Pembahasan</h2>
+              <div className="h-[1px] flex-1 bg-slate-200"></div>
+            </div>
+            
+            <div className="grid grid-cols-1 gap-4">
+              {questions.map((q, idx) => (
+                <div key={idx} className="p-4 bg-white rounded-xl border border-slate-200 space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-[10px] font-bold text-blue-600 uppercase">Butir Soal {idx + 1}</span>
+                    <span className="text-[10px] font-bold bg-slate-100 px-2 py-0.5 rounded text-slate-500 uppercase">{q.cognitiveLevel}</span>
+                  </div>
+                  <p className="text-sm font-bold text-slate-800">Jawaban: <span className="text-emerald-600 ml-1">{q.correctAnswer}</span></p>
+                  <div className="text-xs text-slate-500 leading-relaxed pt-2 border-t border-slate-50">
+                    <span className="font-bold mr-1">Pembahasan:</span> {q.explanation}
+                  </div>
                 </div>
-                <p className="text-sm font-bold text-slate-800">Jawaban: <span className="text-emerald-600 ml-1">{q.correctAnswer}</span></p>
-                <div className="text-xs text-slate-500 leading-relaxed pt-2 border-t border-slate-50">
-                  <span className="font-bold mr-1">Pembahasan:</span> {q.explanation}
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

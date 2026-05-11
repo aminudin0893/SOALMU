@@ -71,7 +71,7 @@ export function exportToExcel(data: ExamData) {
         '', // GAMBAR (C)
         questionNum, // NOMOR (D)
         optionLabel, // PIL (E)
-        opt, // PILIHAN (F)
+        opt.replace(/^[A-E][.\)]\s*/i, ''), // PILIHAN (F)
         '', // PERNYATAAN (G)
         oIdx === 0 ? jenis : '', // JENIS (H)
         oIdx === 0 ? keyLabel : '', // KUNCI (I)

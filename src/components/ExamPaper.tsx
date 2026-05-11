@@ -174,7 +174,7 @@ export function ExamPaper({ data, isLoading, viewMode }: ExamPaperProps) {
                 <div key={idx} className="space-y-3">
                   <div className="flex items-start gap-4">
                     <span className="text-sm font-bold text-slate-900 w-4 shrink-0">{idx + 1}.</span>
-                    <div className="prose prose-slate prose-sm max-w-none text-slate-900 font-bold leading-relaxed pr-8">
+                    <div className="prose prose-slate prose-sm max-w-none text-slate-900 font-normal leading-relaxed pr-8">
                       <ReactMarkdown>{q.text}</ReactMarkdown>
                     </div>
                   </div>
@@ -184,7 +184,7 @@ export function ExamPaper({ data, isLoading, viewMode }: ExamPaperProps) {
                       {q.options.map((option, oIdx) => (
                         <div key={oIdx} className="flex items-start gap-1 text-[13px] text-slate-900">
                           <span className="font-normal shrink-0">{String.fromCharCode(65 + oIdx)}.</span>
-                          <span className="font-normal leading-tight">{option}</span>
+                          <span className="font-normal leading-tight">{option.replace(/^[A-E][.\)]\s*/i, '')}</span>
                         </div>
                       ))}
                     </div>

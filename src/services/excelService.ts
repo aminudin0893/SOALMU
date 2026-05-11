@@ -34,17 +34,15 @@ export function exportToExcel(data: ExamData) {
     const options = q.options || [];
     const optionCount = options.length;
     
-    // JENIS: 1 (Multiple Choice), 2 (Essay), 3 (Matching), 4 (True/False)
+    // JENIS: 1 (Multiple Choice), 2 (Essay)
     let jenis = 1; 
     if (q.options === undefined || q.options.length === 0) jenis = 2;
 
-    // Start row tracking for merges
     const startRowIdx = currentRowIdx;
 
     // Find key label (A, B, C...)
     let keyLabel = q.correctAnswer;
     if (options.length > 0) {
-      // Try to find if correctAnswer is the full text
       const correctIdx = options.findIndex(opt => 
         opt.trim().toLowerCase() === q.correctAnswer.trim().toLowerCase()
       );
@@ -52,7 +50,6 @@ export function exportToExcel(data: ExamData) {
       if (correctIdx !== -1) {
         keyLabel = String.fromCharCode(65 + correctIdx);
       } else {
-        // If not found, maybe it already has "A. Text" or just "A"
         if (q.correctAnswer.length > 1 && q.correctAnswer.includes('.')) {
           keyLabel = q.correctAnswer.split('.')[0].trim();
         } else if (q.correctAnswer.length === 1) {
@@ -61,8 +58,9 @@ export function exportToExcel(data: ExamData) {
       }
     }
 
+    // Reference pattern: 1 row per option
     options.forEach((opt, oIdx) => {
-      const optionLabel = String.fromCharCode(65 + oIdx); // A, B, C, D...
+      const optionLabel = String.fromCharCode(65 + oIdx);
       
       const row = [
         oIdx === 0 ? questionNum : '', // NO (A)
@@ -83,29 +81,21 @@ export function exportToExcel(data: ExamData) {
 
     const endRowIdx = currentRowIdx - 1;
 
-    // Merge Cells to match reference (if question has multiple rows/options)
+    // Merge Cells to match reference
     if (optionCount > 1) {
-      // Column A: NO
-      merges.push({ s: { r: startRowIdx, c: 0 }, e: { r: endRowIdx, c: 0 } });
-      // Column B: SOAL
-      merges.push({ s: { r: startRowIdx, c: 1 }, e: { r: endRowIdx, c: 1 } });
-      // Column C: GAMBAR
-      merges.push({ s: { r: startRowIdx, c: 2 }, e: { r: endRowIdx, c: 2 } });
-      // Column H: JENIS
-      merges.push({ s: { r: startRowIdx, c: 7 }, e: { r: endRowIdx, c: 7 } });
-      // Column I: KUNCI
-      merges.push({ s: { r: startRowIdx, c: 8 }, e: { r: endRowIdx, c: 8 } });
-      // Column J: OPSI
-      merges.push({ s: { r: startRowIdx, c: 9 }, e: { r: endRowIdx, c: 9 } });
+      merges.push({ s: { r: startRowIdx, c: 0 }, e: { r: endRowIdx, c: 0 } }); // NO
+      merges.push({ s: { r: startRowIdx, c: 1 }, e: { r: endRowIdx, c: 1 } }); // SOAL
+      merges.push({ s: { r: startRowIdx, c: 2 }, e: { r: endRowIdx, c: 2 } }); // GAMBAR
+      merges.push({ s: { r: startRowIdx, c: 7 }, e: { r: endRowIdx, c: 7 } }); // JENIS
+      merges.push({ s: { r: startRowIdx, c: 8 }, e: { r: endRowIdx, c: 8 } }); // KUNCI
+      merges.push({ s: { r: startRowIdx, c: 9 }, e: { r: endRowIdx, c: 9 } }); // OPSI
     }
   });
 
   const worksheet = XLSX.utils.aoa_to_sheet(rows);
-  
-  // Set Merges
   worksheet['!merges'] = merges;
 
-  // Add borders and styling to all cells
+  // Add borders and colors
   const range = XLSX.utils.decode_range(worksheet['!ref'] || 'A1');
   for (let R = range.s.r; R <= range.e.r; ++R) {
     for (let C = range.s.c; C <= range.e.c; ++C) {
@@ -126,9 +116,8 @@ export function exportToExcel(data: ExamData) {
         }
       };
 
-      // Header styling
       if (R === 0) {
-        style.fill = { fgColor: { rgb: "FFFF00" } }; // Yellow
+        style.fill = { fgColor: { rgb: "FFFF00" } };
         style.font = { bold: true };
         style.alignment.horizontal = "center";
       }
@@ -137,24 +126,12 @@ export function exportToExcel(data: ExamData) {
     }
   }
 
-  // Set Column Widths (Approximation in characters)
   worksheet['!cols'] = [
-    { wch: 5 },  // NO
-    { wch: 50 }, // SOAL
-    { wch: 20 }, // GAMBAR
-    { wch: 8 },  // NOMOR
-    { wch: 5 },  // PIL
-    { wch: 40 }, // PILIHAN
-    { wch: 20 }, // PERNYATAAN
-    { wch: 8 },  // JENIS
-    { wch: 10 }, // KUNCI
-    { wch: 10 }  // OPSI
+    { wch: 5 }, { wch: 50 }, { wch: 20 }, { wch: 8 }, { wch: 5 }, 
+    { wch: 40 }, { wch: 20 }, { wch: 8 }, { wch: 10 }, { wch: 10 }
   ];
 
   const workbook = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(workbook, worksheet, 'Data-Soal');
-
-  // FileName format
-  const fileName = `Template_Soal_${data.identity.subject.replace(/\s+/g, '_')}_Kelas${data.identity.grade}.xls`;
-  XLSX.writeFile(workbook, fileName);
+  XLSX.writeFile(workbook, `Template_Soal_${data.identity.subject.replace(/\s+/g, '_')}.xls`);
 }

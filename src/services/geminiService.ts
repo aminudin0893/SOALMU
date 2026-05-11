@@ -37,7 +37,7 @@ export async function generateQuestions(
   2. Gunakan peristilahan yang tepat sesuai standar Kurikulum Merdeka.
   3. Berikan 'Kisi-Kisi' yang mendetail untuk setiap butir soal.
   4. Semua teks harus dalam Bahasa Indonesia yang formal dan benar.
-  5. Jika Tipe Soal adalah 'Pilihan Ganda', sertakan minimal 4 atau 5 opsi jawaban (A, B, C, D, E) sesuai jenjang kelas.
+  5. Jika Tipe Soal adalah 'Pilihan Ganda', sertakan TEPAT 4 opsi jawaban (A, B, C, D). Pastikan 'correctAnswer' (Kunci Jawaban) harus benar secara materi dan sesuai dengan salah satu opsi yang diberikan.
   6. KHUSUS UNTUK MATERI PAI/AGAMA ISLAM: Jika topik berkaitan dengan Ilmu Tajwid, Ayat Al-Quran, atau Hadits, WAJIB sertakan teks Arab (dengan harakat) yang relevan di dalam teks soal atau stimulus soal.`;
 
   try {

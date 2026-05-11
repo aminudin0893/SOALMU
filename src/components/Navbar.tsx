@@ -7,7 +7,7 @@ import { GraduationCap, User } from 'lucide-react';
 
 export function Navbar() {
   return (
-    <nav className="h-16 px-6 border-b border-slate-200 bg-white flex items-center justify-between shrink-0 sticky top-0 z-50">
+    <nav className="h-16 px-6 border-b border-slate-200 bg-white flex items-center justify-between shrink-0 sticky top-0 z-50 no-print">
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white shadow-lg shadow-blue-100">
           <GraduationCap className="w-6 h-6" />

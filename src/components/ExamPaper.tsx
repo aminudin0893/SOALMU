@@ -66,8 +66,8 @@ export function ExamPaper({ data, isLoading, viewMode }: ExamPaperProps) {
   const { identity, questions, kisiKisi } = data;
 
   return (
-    <div className="flex-1 overflow-y-auto bg-slate-100 p-4 lg:p-8 custom-scrollbar">
-      <div className="max-w-[640px] mx-auto space-y-8">
+    <div className="flex-1 overflow-y-auto bg-slate-100 p-4 lg:p-8 custom-scrollbar print:overflow-visible print:p-0 print:bg-white">
+      <div className="max-w-[800px] mx-auto space-y-8 print:max-w-none print:m-0">
         
         {/* Actions bar */}
         <div className="flex items-center justify-between no-print mb-8 bg-white/80 backdrop-blur-md p-3 rounded-xl border border-slate-200 shadow-sm">
@@ -112,23 +112,33 @@ export function ExamPaper({ data, isLoading, viewMode }: ExamPaperProps) {
         <motion.div 
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="bg-white rounded-sm shadow-2xl p-12 flex flex-col border border-slate-200 relative w-[794px] mx-auto print:shadow-none print:border-none print:rounded-none print:p-0 print:w-full font-serif overflow-visible mb-20"
+          className="bg-white rounded-sm shadow-2xl p-12 flex flex-col border border-slate-200 relative w-[794px] mx-auto print:shadow-none print:border-none print:rounded-none print:p-0 print:w-full print:mx-0 print:block font-serif overflow-visible mb-20 print:mb-0"
         >
           <style>{`
             @media print {
               @page {
                 size: A4;
-                margin: 15mm;
+                margin: 20mm 15mm;
               }
               body {
-                background: white;
+                background: white !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
               }
               .no-print {
                 display: none !important;
+                height: 0 !important;
+                margin: 0 !important;
+                padding: 0 !important;
               }
               .print-break-inside-avoid {
                 break-inside: avoid;
                 page-break-inside: avoid;
+              }
+              /* Ensure the main container doesn't restrict height */
+              html, body, #root, main {
+                height: auto !important;
+                overflow: visible !important;
               }
             }
           `}</style>

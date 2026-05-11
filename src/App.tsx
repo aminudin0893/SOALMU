@@ -78,12 +78,12 @@ export default function App() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-white font-sans overflow-hidden">
+    <div className="flex flex-col h-screen bg-white font-sans overflow-hidden print:h-auto print:overflow-visible">
       <Navbar />
       
-      <main className="flex-1 flex flex-col lg:flex-row overflow-hidden relative">
+      <main className="flex-1 flex flex-col lg:flex-row overflow-hidden relative print:h-auto print:overflow-visible print:block">
         {/* Mobile View Toggle */}
-        <div className="lg:hidden flex bg-white border-b border-slate-200 p-2 sticky top-[64px] z-40">
+        <div className="lg:hidden flex bg-white border-b border-slate-200 p-2 sticky top-[64px] z-40 no-print">
           <div className="flex bg-slate-100 p-1 rounded-xl w-full">
             <button
               onClick={() => setActiveView('input')}
@@ -109,7 +109,7 @@ export default function App() {
         </div>
 
         {/* Sidebar / Input Area */}
-        <div className={`${activeView === 'input' ? 'flex w-full' : 'hidden'} lg:flex lg:w-96 shrink-0`}>
+        <div className={`${activeView === 'input' ? 'flex w-full' : 'hidden'} lg:flex lg:w-96 shrink-0 no-print`}>
           <Sidebar 
             identity={identity}
             onIdentityChange={setIdentity}
@@ -130,12 +130,12 @@ export default function App() {
         </div>
         
         {/* Main Content / Preview Area */}
-        <div className={`${activeView === 'preview' ? 'flex flex-1' : 'hidden'} lg:flex flex-1 flex-col overflow-hidden`}>
+        <div className={`${activeView === 'preview' ? 'flex flex-1' : 'hidden'} lg:flex flex-1 flex-col overflow-hidden print:h-auto print:overflow-visible print:block`}>
           <ExamPaper data={examData} isLoading={isLoading} activeView={activeView} viewMode={viewMode} />
         </div>
       </main>
 
-      <footer className="h-10 bg-slate-900 text-slate-400 px-6 flex items-center justify-between text-[10px] shrink-0 border-t border-slate-800">
+      <footer className="h-10 bg-slate-900 text-slate-400 px-6 flex items-center justify-between text-[10px] shrink-0 border-t border-slate-800 no-print">
         <div className="flex gap-6">
           <div className="flex items-center gap-1.5">
             <span className="font-bold text-slate-500 uppercase tracking-widest text-[8px] lg:text-[10px]">Status:</span>

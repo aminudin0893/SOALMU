@@ -108,11 +108,11 @@ export function ExamPaper({ data, isLoading, viewMode }: ExamPaperProps) {
           )}
         </div>
 
-        {/* Paper Container */}
+        {/* Paper Container (Simulating A4) */}
         <motion.div 
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="bg-white rounded-sm shadow-2xl p-12 flex flex-col border border-slate-200 relative min-h-[1050px] print:shadow-none print:border-none print:rounded-none print:p-0 font-serif"
+          className="bg-white rounded-sm shadow-2xl p-12 flex flex-col border border-slate-200 relative min-h-[1122px] w-[794px] mx-auto print:shadow-none print:border-none print:rounded-none print:p-0 font-serif"
         >
           {/* Reference Header Style (KOP) */}
           <div className="flex items-center gap-4 pb-2 mb-0">
@@ -148,23 +148,23 @@ export function ExamPaper({ data, isLoading, viewMode }: ExamPaperProps) {
           </div>
 
           {/* Student Info Table */}
-          <div className="grid grid-cols-12 border-2 border-slate-900 mb-8 text-[12px]">
+          <div className="grid grid-cols-12 border-2 border-slate-900 mb-8 text-[12px] font-bold">
             <div className="col-span-6 p-2 border-r-2 border-slate-900 flex items-center">
-              <span className="font-bold mr-2 shrink-0">Nama:</span>
-              <div className="flex-1 border-b border-dotted border-slate-500 h-4"></div>
+              <span className="mr-2 shrink-0">Nama:</span>
+              <div className="flex-1 border-b border-dotted border-slate-400 h-4"></div>
             </div>
             <div className="col-span-3 p-2 border-r-2 border-slate-900 flex items-center">
-              <span className="font-bold mr-2 shrink-0">Kelas:</span>
-              <div className="flex-1 border-b border-dotted border-slate-500 h-4"></div>
+              <span className="mr-2 shrink-0">Kelas:</span>
+              <div className="flex-1 border-b border-dotted border-slate-400 h-4"></div>
             </div>
             <div className="col-span-3 p-2 flex items-center">
-              <span className="font-bold mr-2 shrink-0">Tanggal:</span>
-              <div className="flex-1 border-b border-dotted border-slate-500 h-4"></div>
+              <span className="mr-2 shrink-0">Tanggal:</span>
+              <div className="flex-1 border-b border-dotted border-slate-400 h-4"></div>
             </div>
           </div>
 
-          <div className="mb-4">
-            <h3 className="text-xs font-black uppercase border-b border-slate-900 pb-1 mb-4">BAGIAN : PENILAIAN PILIHAN GANDA</h3>
+          <div className="mb-6">
+            <h3 className="text-[13px] font-black uppercase border-b border-slate-900 pb-1 mb-4">BAGIAN : PENILAIAN PILIHAN GANDA</h3>
           </div>
 
           <div className="flex-1 space-y-8">
@@ -180,54 +180,26 @@ export function ExamPaper({ data, isLoading, viewMode }: ExamPaperProps) {
                   </div>
                   
                   {q.options && q.options.length > 0 && (
-                    <div className="grid grid-flow-col grid-rows-2 gap-x-12 gap-y-2 pl-8 max-w-[500px]">
+                    <div className="grid grid-cols-2 gap-x-12 gap-y-2 pl-8 max-w-[600px]">
                       {q.options.map((option, oIdx) => (
-                        <div key={oIdx} className="flex items-start gap-1 text-[13px] text-slate-900">
-                          <span className="font-normal shrink-0">{String.fromCharCode(65 + oIdx)}. {option}</span>
+                        <div key={oIdx} className="flex items-start gap-1 text-[13px] text-slate-900 uppercase">
+                          <span className="font-medium shrink-0">{String.fromCharCode(65 + oIdx)}. {option}</span>
                         </div>
                       ))}
+                    </div>
+                  )}
+
+                  {/* Inline Key for Teacher Mode */}
+                  {viewMode === 'teacher' && (
+                    <div className="ml-8 mt-2 p-2 bg-blue-50 border border-blue-100 rounded text-[11px] font-bold text-blue-800 italic">
+                      Kunci Jawaban: {q.correctAnswer.charAt(0)}
                     </div>
                   )}
                 </div>
               ))}
             </div>
           </div>
-
-          {/* Paper Footer with Watermark-like appearance */}
-          <div className="absolute bottom-12 right-12 flex items-center gap-2 opacity-10 pointer-events-none select-none">
-            <div className="w-8 h-8 bg-slate-900 rounded flex items-center justify-center text-white text-[10px] font-bold">B</div>
-            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-900">BUATINSOAL AI</span>
-          </div>
         </motion.div>
-
-        {/* Answer Key - Controlled by ViewMode */}
-        {viewMode === 'teacher' && (
-          <div className="mt-12 border-t-2 border-dashed border-slate-300 pt-12 print:break-before-page">
-            <div className="flex items-center gap-4 mb-8">
-              <div className="h-[2px] flex-1 bg-blue-100"></div>
-              <h2 className="text-sm font-black text-blue-900 uppercase tracking-[0.2em] px-4 py-1.5 bg-blue-50 rounded-full border border-blue-200">Kunci Jawaban & Pembahasan</h2>
-              <div className="h-[2px] flex-1 bg-blue-100"></div>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {questions.map((q, idx) => (
-                <div key={idx} className="p-5 bg-white rounded-2xl border-2 border-slate-100 space-y-2 shadow-sm transition-all hover:border-blue-200">
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="text-xs font-black text-blue-600 uppercase">Butir Soal {idx + 1}</span>
-                    <span className="text-[10px] font-bold bg-slate-100 px-2.5 py-1 rounded-full text-slate-500 uppercase">{q.cognitiveLevel}</span>
-                  </div>
-                  <p className="text-[13px] font-bold text-slate-900">
-                    Kunci: <span className="inline-flex items-center justify-center w-6 h-6 bg-emerald-100 text-emerald-700 rounded-md ml-1">{q.correctAnswer.charAt(0)}</span>
-                  </p>
-                  <div className="text-[12px] text-slate-500 leading-relaxed pt-2 border-t border-slate-50">
-                    <span className="font-bold text-slate-700 italic block mb-1">Pembahasan:</span> 
-                    {q.explanation}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

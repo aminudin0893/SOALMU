@@ -58,8 +58,11 @@ export function exportToExcel(data: ExamData) {
       }
     }
 
-    // Reference pattern: 1 row per option
-    options.forEach((opt, oIdx) => {
+    // Reference pattern: 1 row per option (A-E)
+    const displayOptions = [...options];
+    while (displayOptions.length < 5) displayOptions.push('');
+
+    displayOptions.forEach((opt, oIdx) => {
       const optionLabel = String.fromCharCode(65 + oIdx);
       
       const row = [
@@ -72,7 +75,7 @@ export function exportToExcel(data: ExamData) {
         '', // PERNYATAAN (G)
         oIdx === 0 ? jenis : '', // JENIS (H)
         oIdx === 0 ? keyLabel : '', // KUNCI (I)
-        oIdx === 0 ? 4 : '' // OPSI PER SOAL (J)
+        oIdx === 0 ? 5 : '' // OPSI PER SOAL (J)
       ];
       
       rows.push(row);
@@ -82,14 +85,12 @@ export function exportToExcel(data: ExamData) {
     const endRowIdx = currentRowIdx - 1;
 
     // Merge Cells to match reference
-    if (optionCount > 1) {
-      merges.push({ s: { r: startRowIdx, c: 0 }, e: { r: endRowIdx, c: 0 } }); // NO
-      merges.push({ s: { r: startRowIdx, c: 1 }, e: { r: endRowIdx, c: 1 } }); // SOAL
-      merges.push({ s: { r: startRowIdx, c: 2 }, e: { r: endRowIdx, c: 2 } }); // GAMBAR
-      merges.push({ s: { r: startRowIdx, c: 7 }, e: { r: endRowIdx, c: 7 } }); // JENIS
-      merges.push({ s: { r: startRowIdx, c: 8 }, e: { r: endRowIdx, c: 8 } }); // KUNCI
-      merges.push({ s: { r: startRowIdx, c: 9 }, e: { r: endRowIdx, c: 9 } }); // OPSI
-    }
+    merges.push({ s: { r: startRowIdx, c: 0 }, e: { r: endRowIdx, c: 0 } }); // NO
+    merges.push({ s: { r: startRowIdx, c: 1 }, e: { r: endRowIdx, c: 1 } }); // SOAL
+    merges.push({ s: { r: startRowIdx, c: 2 }, e: { r: endRowIdx, c: 2 } }); // GAMBAR
+    merges.push({ s: { r: startRowIdx, c: 7 }, e: { r: endRowIdx, c: 7 } }); // JENIS
+    merges.push({ s: { r: startRowIdx, c: 8 }, e: { r: endRowIdx, c: 8 } }); // KUNCI
+    merges.push({ s: { r: startRowIdx, c: 9 }, e: { r: endRowIdx, c: 9 } }); // OPSI
   });
 
   const worksheet = XLSX.utils.aoa_to_sheet(rows);

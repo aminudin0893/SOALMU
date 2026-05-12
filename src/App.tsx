@@ -78,14 +78,12 @@ export default function App() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-50 font-sans print:h-auto print:overflow-visible">
+    <div className="flex flex-col h-screen h-[100dvh] bg-slate-50 font-sans overflow-hidden print:h-auto print:overflow-visible">
       <Navbar />
       
-      <main className="flex-1 flex flex-col lg:flex-row relative min-h-0 print:h-auto print:overflow-visible print:block">
-        {/* Mobile View Toggle - Removed in favor of bottom nav for better UX */}
-        
+      <main className="flex-1 flex flex-col lg:flex-row relative min-h-0 print:h-auto print:overflow-visible print:block overflow-hidden">
         {/* Sidebar / Input Area */}
-        <div className={`${activeView === 'input' ? 'flex w-full' : 'hidden'} lg:flex lg:w-[420px] shrink-0 no-print min-h-0 lg:border-r lg:border-slate-200 bg-white`}>
+        <div className={`${activeView === 'input' ? 'flex w-full h-full' : 'hidden'} lg:flex lg:w-[420px] shrink-0 no-print min-h-0 lg:border-r lg:border-slate-200 bg-white overflow-hidden`}>
           <Sidebar 
             identity={identity}
             onIdentityChange={setIdentity}
@@ -106,7 +104,7 @@ export default function App() {
         </div>
         
         {/* Main Content / Preview Area */}
-        <div className={`${activeView === 'preview' ? 'flex flex-1' : 'hidden'} lg:flex flex-1 flex-col min-h-0 print:h-auto print:overflow-visible print:block bg-slate-50 relative`}>
+        <div className={`${activeView === 'preview' ? 'flex flex-1 h-full' : 'hidden'} lg:flex flex-1 flex-col min-h-0 print:h-auto print:overflow-visible print:block bg-slate-50 relative overflow-hidden`}>
           <ExamPaper 
             data={examData} 
             isLoading={isLoading} 
@@ -117,7 +115,7 @@ export default function App() {
 
           {/* Floating Bottom Navigation for Mobile */}
           <div className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-sm no-print">
-            <div className="bg-white/80 backdrop-blur-xl border border-slate-200/50 shadow-2xl rounded-2xl flex p-1.5 items-center">
+            <div className="bg-white/90 backdrop-blur-2xl border border-slate-200 shadow-2xl rounded-3xl flex p-2 items-center">
               <button
                 onClick={() => setActiveView('input')}
                 className={`flex-1 py-3 rounded-xl transition-all duration-300 flex flex-col items-center justify-center gap-1 ${

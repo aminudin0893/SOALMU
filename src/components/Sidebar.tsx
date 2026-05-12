@@ -118,8 +118,8 @@ export function Sidebar({
   };
 
   return (
-    <aside className="w-full lg:w-[420px] border-r border-slate-200 bg-white flex flex-col h-full shrink-0 min-h-0">
-      <div className="flex-1 overflow-y-auto p-5 md:p-8 space-y-8 custom-scrollbar overscroll-contain">
+    <aside className="w-full lg:w-[420px] border-r border-slate-200 bg-white flex flex-col h-full shrink-0 min-h-0 overflow-hidden">
+      <div className="flex-1 overflow-y-auto p-5 md:p-8 space-y-8 custom-scrollbar scroll-smooth">
         
         {/* Logo Section - Mobile Only */}
         <div className="lg:hidden flex flex-col items-center justify-center mb-8 bg-gradient-to-br from-blue-50 to-indigo-50/50 p-6 rounded-3xl border border-blue-100/50">

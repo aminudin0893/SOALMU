@@ -67,8 +67,8 @@ export function ExamPaper({ data, isLoading, viewMode, onViewModeChange }: ExamP
   const { identity, questions } = data;
 
   return (
-    <div className="flex-1 overflow-y-auto bg-slate-50 p-4 md:p-6 lg:p-10 custom-scrollbar print:overflow-visible print:p-0 print:bg-white overscroll-contain">
-      <div className="max-w-4xl mx-auto space-y-6 md:space-y-10 print:max-w-none print:m-0 pb-32 lg:pb-10">
+    <div className="flex-1 overflow-y-auto bg-slate-50 p-4 md:p-6 lg:p-10 custom-scrollbar print:overflow-visible print:p-0 print:bg-white scroll-smooth">
+      <div className="max-w-4xl mx-auto space-y-6 md:space-y-10 print:max-w-none print:m-0 pb-40 lg:pb-10">
         
         {/* Actions bar - Card style inspired by Sentosaku */}
         <div className="flex flex-col gap-4 no-print mb-8">

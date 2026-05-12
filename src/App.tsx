@@ -78,12 +78,12 @@ export default function App() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-white font-sans overflow-hidden print:h-auto print:overflow-visible">
+    <div className="flex flex-col h-screen h-[100dvh] bg-white font-sans overflow-hidden print:h-auto print:overflow-visible">
       <Navbar />
       
-      <main className="flex-1 flex flex-col lg:flex-row overflow-hidden relative print:h-auto print:overflow-visible print:block">
+      <main className="flex-1 flex flex-col lg:flex-row min-h-0 relative print:h-auto print:overflow-visible print:block">
         {/* Mobile View Toggle */}
-        <div className="lg:hidden flex bg-white/95 backdrop-blur-md border-b border-slate-200 p-2 sticky top-16 z-40 no-print">
+        <div className="lg:hidden flex bg-white/95 backdrop-blur-md border-b border-slate-200 p-2 z-40 no-print shrink-0">
           <div className="flex bg-slate-100 p-1 rounded-xl w-full border border-slate-200 shadow-inner">
             <button
               onClick={() => setActiveView('input')}
@@ -109,7 +109,7 @@ export default function App() {
         </div>
 
         {/* Sidebar / Input Area */}
-        <div className={`${activeView === 'input' ? 'flex w-full' : 'hidden'} lg:flex lg:w-96 shrink-0 no-print`}>
+        <div className={`${activeView === 'input' ? 'flex w-full' : 'hidden'} lg:flex lg:w-96 shrink-0 no-print min-h-0`}>
           <Sidebar 
             identity={identity}
             onIdentityChange={setIdentity}
@@ -130,7 +130,7 @@ export default function App() {
         </div>
         
         {/* Main Content / Preview Area */}
-        <div className={`${activeView === 'preview' ? 'flex flex-1' : 'hidden'} lg:flex flex-1 flex-col overflow-hidden print:h-auto print:overflow-visible print:block bg-slate-100`}>
+        <div className={`${activeView === 'preview' ? 'flex flex-1' : 'hidden'} lg:flex flex-1 flex-col min-h-0 print:h-auto print:overflow-visible print:block bg-slate-100`}>
           <ExamPaper 
             data={examData} 
             isLoading={isLoading} 

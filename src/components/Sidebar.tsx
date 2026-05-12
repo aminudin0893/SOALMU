@@ -117,8 +117,8 @@ export function Sidebar({
   };
 
   return (
-    <aside className="w-full lg:w-96 border-r border-slate-200 bg-white flex flex-col h-full shrink-0">
-      <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-6 custom-scrollbar">
+    <aside className="w-full lg:w-96 border-r border-slate-200 bg-white flex flex-col h-full shrink-0 min-h-0">
+      <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-6 custom-scrollbar overscroll-contain">
         
         {/* Toggle Mode */}
         <div className="space-y-4">

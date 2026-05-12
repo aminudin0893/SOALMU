@@ -67,12 +67,12 @@ export function ExamPaper({ data, isLoading, viewMode, onViewModeChange }: ExamP
   const { identity, questions } = data;
 
   return (
-    <div className="flex-1 overflow-y-auto bg-slate-100 p-3 md:p-4 lg:p-8 custom-scrollbar print:overflow-visible print:p-0 print:bg-white">
-      <div className="max-w-[800px] mx-auto space-y-4 md:space-y-8 print:max-w-none print:m-0">
+    <div className="flex-1 overflow-y-auto bg-slate-100 p-3 md:p-4 lg:p-8 custom-scrollbar print:overflow-visible print:p-0 print:bg-white overscroll-contain">
+      <div className="max-w-[800px] mx-auto space-y-4 md:space-y-8 print:max-w-none print:m-0 pb-20 lg:pb-10">
         
-        {/* Actions bar */}
-        <div className="flex flex-col gap-4 no-print mb-6">
-          <div className="flex flex-col md:flex-row items-center justify-between bg-white/80 backdrop-blur-md p-3 rounded-xl border border-slate-200 shadow-sm gap-4">
+        {/* Actions bar - Sticky for better utility */}
+        <div className="flex flex-col gap-4 no-print mb-6 sticky top-0 md:relative z-30">
+          <div className="flex flex-col md:flex-row items-center justify-between bg-white/90 backdrop-blur-md p-3 rounded-xl border border-slate-200 shadow-md gap-4">
             <div className="flex w-full md:w-auto gap-3 items-center">
               <span className="px-3 py-1.5 bg-emerald-50 text-emerald-700 text-[10px] font-bold uppercase rounded-lg border border-emerald-100 flex items-center gap-2">
                 <CheckCircle2 className="w-3.5 h-3.5" /> Ready

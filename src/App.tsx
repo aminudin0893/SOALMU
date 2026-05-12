@@ -78,38 +78,14 @@ export default function App() {
   };
 
   return (
-    <div className="flex flex-col h-screen h-[100dvh] bg-white font-sans overflow-hidden print:h-auto print:overflow-visible">
+    <div className="flex flex-col min-h-screen bg-slate-50 font-sans print:h-auto print:overflow-visible">
       <Navbar />
       
-      <main className="flex-1 flex flex-col lg:flex-row min-h-0 relative print:h-auto print:overflow-visible print:block">
-        {/* Mobile View Toggle */}
-        <div className="lg:hidden flex bg-white/95 backdrop-blur-md border-b border-slate-200 p-2 z-40 no-print shrink-0">
-          <div className="flex bg-slate-100 p-1 rounded-xl w-full border border-slate-200 shadow-inner">
-            <button
-              onClick={() => setActiveView('input')}
-              className={`flex-1 py-2.5 text-[11px] font-bold uppercase rounded-lg transition-all flex items-center justify-center gap-2 ${
-                activeView === 'input'
-                  ? 'bg-white shadow-md text-blue-600 scale-[1.02]'
-                  : 'text-slate-500 hover:text-slate-700'
-              }`}
-            >
-              <Edit3 className="w-3.5 h-3.5" /> Input Data
-            </button>
-            <button
-              onClick={() => setActiveView('preview')}
-              className={`flex-1 py-2.5 text-[11px] font-bold uppercase rounded-lg transition-all flex items-center justify-center gap-2 ${
-                activeView === 'preview'
-                  ? 'bg-white shadow-md text-blue-600 scale-[1.02]'
-                  : 'text-slate-500 hover:text-slate-700'
-              }`}
-            >
-              <Eye className="w-3.5 h-3.5" /> Hasil Preview
-            </button>
-          </div>
-        </div>
-
+      <main className="flex-1 flex flex-col lg:flex-row relative min-h-0 print:h-auto print:overflow-visible print:block">
+        {/* Mobile View Toggle - Removed in favor of bottom nav for better UX */}
+        
         {/* Sidebar / Input Area */}
-        <div className={`${activeView === 'input' ? 'flex w-full' : 'hidden'} lg:flex lg:w-96 shrink-0 no-print min-h-0`}>
+        <div className={`${activeView === 'input' ? 'flex w-full' : 'hidden'} lg:flex lg:w-[420px] shrink-0 no-print min-h-0 lg:border-r lg:border-slate-200 bg-white`}>
           <Sidebar 
             identity={identity}
             onIdentityChange={setIdentity}
@@ -130,7 +106,7 @@ export default function App() {
         </div>
         
         {/* Main Content / Preview Area */}
-        <div className={`${activeView === 'preview' ? 'flex flex-1' : 'hidden'} lg:flex flex-1 flex-col min-h-0 print:h-auto print:overflow-visible print:block bg-slate-100`}>
+        <div className={`${activeView === 'preview' ? 'flex flex-1' : 'hidden'} lg:flex flex-1 flex-col min-h-0 print:h-auto print:overflow-visible print:block bg-slate-50 relative`}>
           <ExamPaper 
             data={examData} 
             isLoading={isLoading} 
@@ -138,10 +114,39 @@ export default function App() {
             viewMode={viewMode} 
             onViewModeChange={setViewMode}
           />
+
+          {/* Floating Bottom Navigation for Mobile */}
+          <div className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-sm no-print">
+            <div className="bg-white/80 backdrop-blur-xl border border-slate-200/50 shadow-2xl rounded-2xl flex p-1.5 items-center">
+              <button
+                onClick={() => setActiveView('input')}
+                className={`flex-1 py-3 rounded-xl transition-all duration-300 flex flex-col items-center justify-center gap-1 ${
+                  activeView === 'input'
+                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-200'
+                    : 'text-slate-500 hover:bg-slate-100'
+                }`}
+              >
+                <Edit3 className="w-5 h-5" />
+                <span className="text-[9px] font-bold uppercase tracking-widest">Input</span>
+              </button>
+              <div className="w-[1px] h-8 bg-slate-200 mx-1" />
+              <button
+                onClick={() => setActiveView('preview')}
+                className={`flex-1 py-3 rounded-xl transition-all duration-300 flex flex-col items-center justify-center gap-1 ${
+                  activeView === 'preview'
+                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-200'
+                    : 'text-slate-500 hover:bg-slate-100'
+                }`}
+              >
+                <Eye className="w-5 h-5" />
+                <span className="text-[9px] font-bold uppercase tracking-widest">Preview</span>
+              </button>
+            </div>
+          </div>
         </div>
       </main>
 
-      <footer className="h-auto py-2 lg:h-10 bg-slate-900 text-slate-400 px-4 lg:px-6 flex flex-col lg:flex-row items-center justify-between text-[10px] shrink-0 border-t border-slate-800 no-print gap-2">
+      <footer className="h-10 bg-slate-900 text-slate-400 px-6 hidden lg:flex items-center justify-between text-[10px] shrink-0 border-t border-slate-800 no-print">
         <div className="flex flex-wrap justify-center gap-4 lg:gap-6">
           <div className="flex items-center gap-1.5">
             <span className="font-bold text-slate-500 uppercase tracking-widest text-[8px] lg:text-[10px]">Status:</span>

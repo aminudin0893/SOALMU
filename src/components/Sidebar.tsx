@@ -25,7 +25,8 @@ import {
   Building,
   Mail,
   Phone,
-  Globe
+  Globe,
+  GraduationCap
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -117,93 +118,138 @@ export function Sidebar({
   };
 
   return (
-    <aside className="w-full lg:w-96 border-r border-slate-200 bg-white flex flex-col h-full shrink-0 min-h-0">
-      <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-6 custom-scrollbar overscroll-contain">
+    <aside className="w-full lg:w-[420px] border-r border-slate-200 bg-white flex flex-col h-full shrink-0 min-h-0">
+      <div className="flex-1 overflow-y-auto p-5 md:p-8 space-y-8 custom-scrollbar overscroll-contain">
         
-        {/* Toggle Mode */}
-        <div className="space-y-4">
-          <label className="flex items-center gap-2 text-sm font-bold text-slate-800 uppercase tracking-wide">
-            <UserCircle className="w-4 h-4 text-emerald-600" /> Mode Tampilan
-          </label>
-          <div className="flex bg-slate-100 p-1 rounded-xl">
-            <button
-              onClick={() => onViewModeChange('teacher')}
-              className={`flex-1 py-2 text-[10px] font-bold uppercase rounded-lg transition-all flex items-center justify-center gap-2 ${
-                viewMode === 'teacher'
-                  ? 'bg-blue-600 text-white shadow-lg'
-                  : 'text-slate-500 hover:text-slate-700'
-              }`}
-            >
-              <UserCheck className="w-3 h-3" /> Guru
-            </button>
-            <button
-              onClick={() => onViewModeChange('student')}
-              className={`flex-1 py-2 text-[10px] font-bold uppercase rounded-lg transition-all flex items-center justify-center gap-2 ${
-                viewMode === 'student'
-                  ? 'bg-emerald-600 text-white shadow-lg'
-                  : 'text-slate-500 hover:text-slate-700'
-              }`}
-            >
-              <UserCircle className="w-3 h-3" /> Siswa
-            </button>
+        {/* Logo Section - Mobile Only */}
+        <div className="lg:hidden flex flex-col items-center justify-center mb-8 bg-gradient-to-br from-blue-50 to-indigo-50/50 p-6 rounded-3xl border border-blue-100/50">
+          <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-blue-200 mb-4">
+            <GraduationCap className="w-8 h-8" />
           </div>
-        </div>
-        
-        {/* Section: API Key */}
-        <div className="space-y-4">
-          <label className="flex items-center gap-2 text-sm font-bold text-slate-800 uppercase tracking-wide">
-            <Key className="w-4 h-4 text-blue-600" /> Konfigurasi AI
-          </label>
-          <div className="flex flex-col gap-2">
-            <input
-              type="password"
-              placeholder="Gemini API Key..."
-              value={apiKey}
-              onChange={(e) => onApiKeyChange(e.target.value)}
-              className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-md text-sm outline-none focus:border-blue-500 transition-all shadow-sm"
-            />
-            <button
-              onClick={onSaveApiKey}
-              className="w-full py-2 bg-slate-900 border border-slate-800 text-white rounded-md text-xs font-bold hover:bg-slate-800 transition-colors shadow-lg active:scale-95"
-            >
-              Simpan API Key
-            </button>
+          <h2 className="text-2xl font-black text-slate-900 tracking-tight">BuatinSoal<span className="text-blue-600">MU</span></h2>
+          <div className="mt-2 flex items-center gap-2 px-3 py-1 bg-white/80 rounded-full border border-blue-100 shadow-sm">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Engine Active</span>
           </div>
         </div>
 
-        {/* Section: Sekolah */}
+        {/* Action Toggle Area */}
+        <div className="bg-slate-50/50 rounded-2xl p-6 border border-slate-100">
+          <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-5 flex items-center gap-2">
+            <Settings2 className="w-4 h-4" /> Mode Konfigurasi
+          </h3>
+          <div className="space-y-4">
+            <div className="flex bg-white p-1 rounded-2xl border border-slate-200 shadow-sm">
+              <button
+                onClick={() => onViewModeChange('teacher')}
+                className={`flex-1 py-3 text-[11px] font-bold uppercase rounded-xl transition-all duration-300 flex items-center justify-center gap-2 ${
+                  viewMode === 'teacher'
+                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-100'
+                    : 'text-slate-400 hover:text-slate-600'
+                }`}
+              >
+                <UserCheck className="w-4 h-4" /> Guru
+              </button>
+              <button
+                onClick={() => onViewModeChange('student')}
+                className={`flex-1 py-3 text-[11px] font-bold uppercase rounded-xl transition-all duration-300 flex items-center justify-center gap-2 ${
+                  viewMode === 'student'
+                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-100'
+                    : 'text-slate-400 hover:text-slate-600'
+                }`}
+              >
+                <UserCircle className="w-4 h-4" /> Siswa
+              </button>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2">
+              {[QuestionType.MULTIPLE_CHOICE, QuestionType.ESSAY].map((type) => (
+                <button
+                  key={type}
+                  onClick={() => onTypeChange(type)}
+                  className={`py-3.5 rounded-2xl text-[11px] font-bold uppercase tracking-wider transition-all border ${
+                    selectedType === type
+                      ? 'bg-white border-blue-600 text-blue-600 shadow-md ring-2 ring-blue-600/10'
+                      : 'bg-white border-slate-200 text-slate-500 hover:border-blue-300'
+                  }`}
+                >
+                  {type === QuestionType.MULTIPLE_CHOICE ? 'Pilihan Ganda' : 'Essay / Isian'}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* AI API Configuration */}
         <div className="space-y-4">
-          <label className="flex items-center gap-2 text-sm font-bold text-slate-800 uppercase tracking-wide">
-            <Building className="w-4 h-4 text-blue-600" /> Identitas Sekolah
-          </label>
-          <div className="space-y-3">
-            <div className="flex flex-col items-center gap-3 p-4 border border-dashed border-slate-200 rounded-xl bg-slate-50/50">
+          <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-2 px-1">
+            <Key className="w-4 h-4 text-blue-500" /> API Key Gemini
+          </h3>
+          <div className="flex bg-white p-2 rounded-2xl border border-slate-200 shadow-sm gap-2">
+            <input
+              type="password"
+              placeholder="Masukkan API Key..."
+              value={apiKey}
+              onChange={(e) => onApiKeyChange(e.target.value)}
+              className="flex-1 px-4 py-3 bg-slate-50 border-none rounded-xl text-sm outline-none focus:bg-white transition-all"
+            />
+            <button
+              onClick={onSaveApiKey}
+              className="px-4 py-3 bg-slate-900 text-white rounded-xl text-xs font-bold hover:bg-slate-800 transition-all shadow-lg active:scale-95"
+            >
+              Simpan
+            </button>
+          </div>
+          <p className="text-[10px] text-slate-400 leading-relaxed px-1">
+            *Dapatkan API Key gratis di <a href="https://aistudio.google.com/" target="_blank" className="text-blue-500 underline font-bold">Google AI Studio</a>.
+          </p>
+        </div>
+
+        {/* Identity Section */}
+        <div className="space-y-6 pt-2">
+          <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-2 px-1">
+            <Building className="w-4 h-4 text-emerald-500" /> Identitas Satuan
+          </h3>
+          
+          <div className="grid grid-cols-1 gap-5">
+            {/* Logo Upload Card */}
+            <div className={`p-6 border-2 border-dashed rounded-3xl transition-all flex flex-col items-center justify-center gap-4 ${
+              identity.logo ? 'border-emerald-200 bg-emerald-50/20' : 'border-slate-200 bg-slate-50 hover:bg-white hover:border-blue-300'
+            }`}>
               {identity.logo ? (
-                <div className="relative group">
-                  <img src={identity.logo} alt="School Logo" className="h-16 w-16 object-contain" />
+                <div className="relative">
+                  <img src={identity.logo} alt="Logo" className="h-20 w-20 object-contain drop-shadow-md" />
                   <button 
                     onClick={() => onIdentityChange({ ...identity, logo: undefined })}
-                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow-md opacity-0 group-hover:opacity-100 transition-opacity"
+                    className="absolute -top-3 -right-3 bg-red-500 text-white rounded-full p-2 shadow-xl hover:bg-red-600 transition-all active:scale-90"
                   >
-                    <Trash2 className="w-3 h-3" />
+                    <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
               ) : (
-                <label className="flex flex-col items-center gap-2 cursor-pointer hover:text-blue-600 transition-colors">
-                  <Upload className="w-6 h-6 text-slate-400" />
-                  <span className="text-[10px] font-bold uppercase">Upload Logo Sekolah</span>
+                <label className="flex flex-col items-center gap-3 cursor-pointer group w-full">
+                  <div className="w-12 h-12 rounded-full bg-white shadow-md flex items-center justify-center text-slate-400 group-hover:text-blue-600 transition-all">
+                    <Upload className="w-6 h-6" />
+                  </div>
+                  <div className="text-center">
+                    <span className="text-xs font-bold text-slate-600">Klik Upload Logo</span>
+                    <p className="text-[9px] text-slate-400 font-bold uppercase mt-1 tracking-widest">PNG/JPG (Max 2MB)</p>
+                  </div>
                   <input type="file" accept="image/*" className="hidden" onChange={handleLogoUpload} />
                 </label>
               )}
             </div>
             
-            <input
-              type="text"
-              placeholder="Nama Sekolah..."
-              value={identity.schoolName || ''}
-              onChange={(e) => onIdentityChange({ ...identity, schoolName: e.target.value })}
-              className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-md text-sm outline-none focus:border-blue-500 transition-all shadow-sm"
-            />
+            <div className="space-y-2">
+              <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Nama Satuan Pendidikan</label>
+              <input
+                type="text"
+                placeholder="Contoh: SMP Muhammadiyah 1 Probolinggo"
+                value={identity.schoolName || ''}
+                onChange={(e) => onIdentityChange({ ...identity, schoolName: e.target.value })}
+                className="w-full px-5 py-4 bg-white border border-slate-200 rounded-2xl text-[13px] font-medium outline-none focus:border-blue-500 shadow-sm transition-all focus:ring-4 focus:ring-blue-500/5"
+              />
+            </div>
             <input
               type="text"
               placeholder="Alamat Sekolah..."

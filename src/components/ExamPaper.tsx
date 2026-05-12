@@ -67,53 +67,58 @@ export function ExamPaper({ data, isLoading, viewMode, onViewModeChange }: ExamP
   const { identity, questions } = data;
 
   return (
-    <div className="flex-1 overflow-y-auto bg-slate-100 p-3 md:p-4 lg:p-8 custom-scrollbar print:overflow-visible print:p-0 print:bg-white overscroll-contain">
-      <div className="max-w-[800px] mx-auto space-y-4 md:space-y-8 print:max-w-none print:m-0 pb-20 lg:pb-10">
+    <div className="flex-1 overflow-y-auto bg-slate-50 p-4 md:p-6 lg:p-10 custom-scrollbar print:overflow-visible print:p-0 print:bg-white overscroll-contain">
+      <div className="max-w-4xl mx-auto space-y-6 md:space-y-10 print:max-w-none print:m-0 pb-32 lg:pb-10">
         
-        {/* Actions bar - Sticky for better utility */}
-        <div className="flex flex-col gap-4 no-print mb-6 sticky top-0 md:relative z-30">
-          <div className="flex flex-col md:flex-row items-center justify-between bg-white/90 backdrop-blur-md p-3 rounded-xl border border-slate-200 shadow-md gap-4">
-            <div className="flex w-full md:w-auto gap-3 items-center">
-              <span className="px-3 py-1.5 bg-emerald-50 text-emerald-700 text-[10px] font-bold uppercase rounded-lg border border-emerald-100 flex items-center gap-2">
-                <CheckCircle2 className="w-3.5 h-3.5" /> Ready
-              </span>
+        {/* Actions bar - Card style inspired by Sentosaku */}
+        <div className="flex flex-col gap-4 no-print mb-8">
+          <div className="bg-white rounded-3xl border border-slate-200/60 shadow-xl shadow-slate-200/40 p-4 md:p-5 flex flex-col md:flex-row items-center justify-between gap-5">
+            <div className="flex items-center gap-4 w-full md:w-auto">
+              <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600 shrink-0">
+                <CheckCircle2 className="w-6 h-6" />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">Status</span>
+                <span className="text-sm font-bold text-slate-700">Soal Siap Digunakan</span>
+              </div>
               
-              {/* Mode indicator - Now a toggle */}
+              <div className="h-8 w-px bg-slate-100 hidden md:block mx-2" />
+              
               <button 
                 onClick={() => onViewModeChange(viewMode === 'teacher' ? 'student' : 'teacher')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-bold shadow-sm ring-1 ring-inset transition-all active:scale-95 ${
+                className={`flex items-center gap-2.5 px-4 py-2 rounded-2xl text-xs font-bold transition-all active:scale-95 shadow-sm ${
                   viewMode === 'teacher' 
-                    ? 'bg-blue-600 text-white ring-blue-700' 
-                    : 'bg-emerald-600 text-white ring-emerald-700'
+                    ? 'bg-blue-600 text-white shadow-blue-100' 
+                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                 }`}
               >
-                {viewMode === 'teacher' ? <UserCheck className="w-3.5 h-3.5" /> : <UserCircle className="w-3.5 h-3.5" />}
-                {viewMode === 'teacher' ? 'GURU (KUNCI ON)' : 'SISWA (KUNCI OFF)'}
+                {viewMode === 'teacher' ? <UserCheck className="w-4 h-4" /> : <UserCircle className="w-4 h-4" />}
+                {viewMode === 'teacher' ? 'Mode Guru' : 'Mode Siswa'}
               </button>
             </div>
             
-            <div className="grid grid-cols-2 md:flex w-full md:w-auto gap-2">
+            <div className="grid grid-cols-2 md:flex w-full md:w-auto gap-3">
               <button 
                 onClick={() => window.print()}
-                className="flex items-center justify-center gap-2 px-3 py-2 bg-white border border-slate-200 rounded-lg text-[11px] font-bold text-slate-700 hover:bg-slate-50 transition-all shadow-sm active:scale-95 px-4"
+                className="flex items-center justify-center gap-2 px-5 py-3 bg-white border border-slate-200 rounded-2xl text-xs font-bold text-slate-700 hover:bg-slate-50 transition-all shadow-sm active:scale-95"
               >
-                <Printer className="w-4 h-4" /> CETAK
+                <Printer className="w-4 h-4 text-blue-600" /> Cetak
               </button>
               <button 
                 onClick={() => exportToExcel(data)}
-                className="flex items-center justify-center gap-2 px-3 py-2 bg-emerald-600 text-white rounded-lg text-[11px] font-bold hover:bg-emerald-700 transition-all shadow-md active:scale-95 px-4"
+                className="flex items-center justify-center gap-2 px-5 py-3 bg-emerald-600 text-white rounded-2xl text-xs font-bold hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-100 active:scale-95"
               >
-                <FileSpreadsheet className="w-4 h-4" /> EXCEL
+                <FileSpreadsheet className="w-4 h-4" /> Excel
               </button>
-              <button className="flex items-center justify-center gap-2 px-3 py-2 bg-blue-600 text-white rounded-lg text-[11px] font-bold hover:bg-blue-700 transition-all shadow-md active:scale-95 col-span-2 md:col-span-1 px-4">
-                <Download className="w-4 h-4" /> BUKA .DOCX
+              <button className="flex items-center justify-center gap-2 px-5 py-3 bg-blue-600 text-white rounded-2xl text-xs font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-100 active:scale-95 col-span-2 md:col-span-1">
+                <Download className="w-4 h-4" /> Dokumen (.docx)
               </button>
             </div>
           </div>
         </div>
 
         {/* Paper Container */}
-        <div className="flex-1 flex flex-col items-center w-full pb-10">
+        <div className="flex-1 flex flex-col items-center w-full">
           <motion.div 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}

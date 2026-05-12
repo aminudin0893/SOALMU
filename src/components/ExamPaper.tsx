@@ -27,9 +27,10 @@ interface ExamPaperProps {
   isLoading: boolean;
   activeView: string;
   viewMode: 'teacher' | 'student';
+  onViewModeChange: (mode: 'teacher' | 'student') => void;
 }
 
-export function ExamPaper({ data, isLoading, viewMode }: ExamPaperProps) {
+export function ExamPaper({ data, isLoading, viewMode, onViewModeChange }: ExamPaperProps) {
   if (isLoading) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-10 text-center space-y-6">
@@ -63,58 +64,62 @@ export function ExamPaper({ data, isLoading, viewMode }: ExamPaperProps) {
     );
   }
 
-  const { identity, questions, kisiKisi } = data;
+  const { identity, questions } = data;
 
   return (
-    <div className="flex-1 overflow-y-auto bg-slate-100 p-4 lg:p-8 custom-scrollbar print:overflow-visible print:p-0 print:bg-white">
-      <div className="max-w-[800px] mx-auto space-y-8 print:max-w-none print:m-0">
+    <div className="flex-1 overflow-y-auto bg-slate-100 p-3 md:p-4 lg:p-8 custom-scrollbar print:overflow-visible print:p-0 print:bg-white">
+      <div className="max-w-[800px] mx-auto space-y-4 md:space-y-8 print:max-w-none print:m-0">
         
         {/* Actions bar */}
-        <div className="flex items-center justify-between no-print mb-8 bg-white/80 backdrop-blur-md p-3 rounded-xl border border-slate-200 shadow-sm">
-          <div className="flex gap-2">
-            <span className="px-3 py-1 bg-emerald-50 text-emerald-700 text-[10px] font-bold uppercase rounded border border-emerald-100 flex items-center gap-1.5">
-              <CheckCircle2 className="w-3 h-3" /> Ready
-            </span>
-          </div>
-          <div className="flex gap-2">
-            <button 
-              onClick={() => window.print()}
-              className="flex items-center gap-2 px-3 py-1.5 bg-white border border-slate-200 rounded-md text-[11px] font-bold text-slate-700 hover:bg-slate-50 transition-all active:scale-95"
-            >
-              <Printer className="w-3.5 h-3.5" /> CETAK / PDF
-            </button>
-            <button 
-              onClick={() => exportToExcel(data)}
-              className="flex items-center gap-2 px-3 py-1.5 bg-emerald-600 text-white rounded-md text-[11px] font-bold hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-100 active:scale-95"
-            >
-              <FileSpreadsheet className="w-3.5 h-3.5" /> EXCEL (.XLS)
-            </button>
-            <button className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white rounded-md text-[11px] font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-100 active:scale-95">
-              <Download className="w-3.5 h-3.5" /> UNDUH .DOCX
-            </button>
+        <div className="flex flex-col gap-4 no-print mb-6">
+          <div className="flex flex-col md:flex-row items-center justify-between bg-white/80 backdrop-blur-md p-3 rounded-xl border border-slate-200 shadow-sm gap-4">
+            <div className="flex w-full md:w-auto gap-3 items-center">
+              <span className="px-3 py-1.5 bg-emerald-50 text-emerald-700 text-[10px] font-bold uppercase rounded-lg border border-emerald-100 flex items-center gap-2">
+                <CheckCircle2 className="w-3.5 h-3.5" /> Ready
+              </span>
+              
+              {/* Mode indicator - Now a toggle */}
+              <button 
+                onClick={() => onViewModeChange(viewMode === 'teacher' ? 'student' : 'teacher')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-bold shadow-sm ring-1 ring-inset transition-all active:scale-95 ${
+                  viewMode === 'teacher' 
+                    ? 'bg-blue-600 text-white ring-blue-700' 
+                    : 'bg-emerald-600 text-white ring-emerald-700'
+                }`}
+              >
+                {viewMode === 'teacher' ? <UserCheck className="w-3.5 h-3.5" /> : <UserCircle className="w-3.5 h-3.5" />}
+                {viewMode === 'teacher' ? 'GURU (KUNCI ON)' : 'SISWA (KUNCI OFF)'}
+              </button>
+            </div>
+            
+            <div className="grid grid-cols-2 md:flex w-full md:w-auto gap-2">
+              <button 
+                onClick={() => window.print()}
+                className="flex items-center justify-center gap-2 px-3 py-2 bg-white border border-slate-200 rounded-lg text-[11px] font-bold text-slate-700 hover:bg-slate-50 transition-all shadow-sm active:scale-95 px-4"
+              >
+                <Printer className="w-4 h-4" /> CETAK
+              </button>
+              <button 
+                onClick={() => exportToExcel(data)}
+                className="flex items-center justify-center gap-2 px-3 py-2 bg-emerald-600 text-white rounded-lg text-[11px] font-bold hover:bg-emerald-700 transition-all shadow-md active:scale-95 px-4"
+              >
+                <FileSpreadsheet className="w-4 h-4" /> EXCEL
+              </button>
+              <button className="flex items-center justify-center gap-2 px-3 py-2 bg-blue-600 text-white rounded-lg text-[11px] font-bold hover:bg-blue-700 transition-all shadow-md active:scale-95 col-span-2 md:col-span-1 px-4">
+                <Download className="w-4 h-4" /> BUKA .DOCX
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* Mode Indicator - UI Only - Non Printing */}
-        <div className="absolute top-4 right-4 no-print flex gap-2 z-50">
-          {viewMode === 'teacher' ? (
-            <div className="flex items-center gap-1.5 px-3 py-1 bg-blue-600 text-white rounded-full text-[10px] font-bold shadow-lg ring-2 ring-white">
-              <UserCheck className="w-3 h-3" /> MODE GURU (KUNCI AKTIF)
-            </div>
-          ) : (
-            <div className="flex items-center gap-1.5 px-3 py-1 bg-emerald-600 text-white rounded-full text-[10px] font-bold shadow-lg ring-2 ring-white">
-              <UserCircle className="w-3 h-3" /> MODE SISWA (KUNCI TERSEMBUNYI)
-            </div>
-          )}
-        </div>
-
-        {/* Paper Container (Optimized for Multi-page PDF) */}
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.98 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="bg-white rounded-sm shadow-2xl p-12 flex flex-col border border-slate-200 relative w-[794px] mx-auto print:shadow-none print:border-none print:rounded-none print:p-0 print:w-full print:mx-0 print:block font-serif overflow-visible mb-20 print:mb-0"
-        >
-          <style>{`
+        {/* Paper Container */}
+        <div className="flex-1 flex flex-col items-center w-full pb-10">
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white rounded-sm shadow-2xl p-6 md:p-12 flex flex-col border border-slate-200 relative w-full sm:w-[794px] mx-auto print:shadow-none print:border-none print:rounded-none print:p-0 print:w-full print:mx-0 print:block font-serif overflow-visible origin-top"
+          >
+            <style>{`
             @media print {
               @page {
                 size: A4;
@@ -143,20 +148,20 @@ export function ExamPaper({ data, isLoading, viewMode }: ExamPaperProps) {
             }
           `}</style>
           {/* Reference Header Style (KOP) */}
-          <div className="flex items-center gap-4 pb-2 mb-0">
+          <div className="flex flex-col sm:flex-row items-center gap-4 pb-2 mb-0">
             {identity.logo ? (
-              <img src={identity.logo} alt="Logo" className="w-[110px] h-[110px] object-contain flex-shrink-0" />
+              <img src={identity.logo} alt="Logo" className="w-16 h-16 sm:w-[110px] sm:h-[110px] object-contain flex-shrink-0" />
             ) : (
-              <div className="w-[110px] h-[110px] bg-slate-100 flex items-center justify-center text-slate-300 flex-shrink-0">
-                <GraduationCap className="w-12 h-12" />
+              <div className="w-16 h-16 sm:w-[110px] sm:h-[110px] bg-slate-100 flex items-center justify-center text-slate-300 flex-shrink-0">
+                <GraduationCap className="w-8 h-8 sm:w-12 sm:h-12" />
               </div>
             )}
             <div className="flex-1 text-center text-slate-900">
-              <h3 className="text-[14px] font-bold uppercase leading-tight tracking-tight">MAJELIS PENDIDIKAN DASAR MENENGAH DAN PENDIDIKAN NON FORMAL</h3>
-              <h3 className="text-[14px] font-bold uppercase leading-tight tracking-tight">PIMPINAN DAERAH MUHAMMADIYAH KOTA PROBOLINGGO</h3>
-              <h1 className="text-xl font-black uppercase tracking-normal mt-1 mb-1">{identity.schoolName || 'SMP MUHAMMADIYAH 1 KOTA PROBOLINGGO'}</h1>
-              <p className="text-[13px] font-bold uppercase mb-1">TERAKREDITASI A</p>
-              <div className="text-[10px] font-medium leading-tight">
+              <h3 className="text-[10px] sm:text-[14px] font-bold uppercase leading-tight tracking-tight">MAJELIS PENDIDIKAN DASAR MENENGAH DAN PENDIDIKAN NON FORMAL</h3>
+              <h3 className="text-[10px] sm:text-[14px] font-bold uppercase leading-tight tracking-tight">PIMPINAN DAERAH MUHAMMADIYAH KOTA PROBOLINGGO</h3>
+              <h1 className="text-sm sm:text-xl font-black uppercase tracking-normal mt-1 mb-1">{identity.schoolName || 'SMP MUHAMMADIYAH 1 KOTA PROBOLINGGO'}</h1>
+              <p className="text-[10px] sm:text-[13px] font-bold uppercase mb-1">TERAKREDITASI A</p>
+              <div className="text-[8px] sm:text-[10px] font-medium leading-tight">
                 {identity.schoolAddress && <span>{identity.schoolAddress} </span>}
                 {identity.schoolEmail && <span>Email: <span className="text-blue-600 underline font-semibold">{identity.schoolEmail}</span> </span>}
                 <br />
@@ -176,16 +181,16 @@ export function ExamPaper({ data, isLoading, viewMode }: ExamPaperProps) {
           </div>
 
           {/* Student Info Table */}
-          <div className="grid grid-cols-12 border-2 border-slate-900 mb-8 text-[12px] font-bold">
-            <div className="col-span-6 p-2 border-r-2 border-slate-900 flex items-center">
+          <div className="grid grid-cols-1 sm:grid-cols-12 border-2 border-slate-900 mb-8 text-[11px] sm:text-[12px] font-bold">
+            <div className="col-span-1 sm:col-span-6 p-2 border-b-2 sm:border-b-0 sm:border-r-2 border-slate-900 flex items-center">
               <span className="mr-2 shrink-0">Nama:</span>
               <div className="flex-1 border-b border-dotted border-slate-400 h-4"></div>
             </div>
-            <div className="col-span-3 p-2 border-r-2 border-slate-900 flex items-center">
+            <div className="col-span-1 sm:col-span-3 p-2 border-b-2 sm:border-b-0 sm:border-r-2 border-slate-900 flex items-center">
               <span className="mr-2 shrink-0">Kelas:</span>
               <div className="flex-1 border-b border-dotted border-slate-400 h-4"></div>
             </div>
-            <div className="col-span-3 p-2 flex items-center">
+            <div className="col-span-1 sm:col-span-3 p-2 flex items-center">
               <span className="mr-2 shrink-0">Tanggal:</span>
               <div className="flex-1 border-b border-dotted border-slate-400 h-4"></div>
             </div>
@@ -208,7 +213,7 @@ export function ExamPaper({ data, isLoading, viewMode }: ExamPaperProps) {
                   </div>
                   
                   {q.options && q.options.length > 0 && (
-                    <div className="grid grid-cols-2 gap-x-12 gap-y-2 pl-8 max-w-[600px]">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-2 pl-4 sm:pl-8 max-w-[600px]">
                       {q.options.slice(0, 4).map((option, oIdx) => (
                         <div key={oIdx} className="flex items-start gap-1 text-[13px] text-slate-900">
                           <span className="font-normal shrink-0">{String.fromCharCode(65 + oIdx)}.</span>
@@ -231,7 +236,8 @@ export function ExamPaper({ data, isLoading, viewMode }: ExamPaperProps) {
         </motion.div>
       </div>
     </div>
-  );
+  </div>
+);
 }
 
 // Dummy for icon

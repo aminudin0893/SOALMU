@@ -83,27 +83,27 @@ export default function App() {
       
       <main className="flex-1 flex flex-col lg:flex-row overflow-hidden relative print:h-auto print:overflow-visible print:block">
         {/* Mobile View Toggle */}
-        <div className="lg:hidden flex bg-white border-b border-slate-200 p-2 sticky top-[64px] z-40 no-print">
-          <div className="flex bg-slate-100 p-1 rounded-xl w-full">
+        <div className="lg:hidden flex bg-white/95 backdrop-blur-md border-b border-slate-200 p-2 sticky top-16 z-40 no-print">
+          <div className="flex bg-slate-100 p-1 rounded-xl w-full border border-slate-200 shadow-inner">
             <button
               onClick={() => setActiveView('input')}
-              className={`flex-1 py-2 text-[10px] font-bold uppercase rounded-lg transition-all flex items-center justify-center gap-2 ${
+              className={`flex-1 py-2.5 text-[11px] font-bold uppercase rounded-lg transition-all flex items-center justify-center gap-2 ${
                 activeView === 'input'
-                  ? 'bg-white shadow-sm text-blue-600'
-                  : 'text-slate-500'
+                  ? 'bg-white shadow-md text-blue-600 scale-[1.02]'
+                  : 'text-slate-500 hover:text-slate-700'
               }`}
             >
-              <Edit3 className="w-3 h-3" /> Input Data
+              <Edit3 className="w-3.5 h-3.5" /> Input Data
             </button>
             <button
               onClick={() => setActiveView('preview')}
-              className={`flex-1 py-2 text-[10px] font-bold uppercase rounded-lg transition-all flex items-center justify-center gap-2 ${
+              className={`flex-1 py-2.5 text-[11px] font-bold uppercase rounded-lg transition-all flex items-center justify-center gap-2 ${
                 activeView === 'preview'
-                  ? 'bg-white shadow-sm text-blue-600'
-                  : 'text-slate-500'
+                  ? 'bg-white shadow-md text-blue-600 scale-[1.02]'
+                  : 'text-slate-500 hover:text-slate-700'
               }`}
             >
-              <Eye className="w-3 h-3" /> Hasil Preview
+              <Eye className="w-3.5 h-3.5" /> Hasil Preview
             </button>
           </div>
         </div>
@@ -130,22 +130,28 @@ export default function App() {
         </div>
         
         {/* Main Content / Preview Area */}
-        <div className={`${activeView === 'preview' ? 'flex flex-1' : 'hidden'} lg:flex flex-1 flex-col overflow-hidden print:h-auto print:overflow-visible print:block`}>
-          <ExamPaper data={examData} isLoading={isLoading} activeView={activeView} viewMode={viewMode} />
+        <div className={`${activeView === 'preview' ? 'flex flex-1' : 'hidden'} lg:flex flex-1 flex-col overflow-hidden print:h-auto print:overflow-visible print:block bg-slate-100`}>
+          <ExamPaper 
+            data={examData} 
+            isLoading={isLoading} 
+            activeView={activeView} 
+            viewMode={viewMode} 
+            onViewModeChange={setViewMode}
+          />
         </div>
       </main>
 
-      <footer className="h-10 bg-slate-900 text-slate-400 px-6 flex items-center justify-between text-[10px] shrink-0 border-t border-slate-800 no-print">
-        <div className="flex gap-6">
+      <footer className="h-auto py-2 lg:h-10 bg-slate-900 text-slate-400 px-4 lg:px-6 flex flex-col lg:flex-row items-center justify-between text-[10px] shrink-0 border-t border-slate-800 no-print gap-2">
+        <div className="flex flex-wrap justify-center gap-4 lg:gap-6">
           <div className="flex items-center gap-1.5">
             <span className="font-bold text-slate-500 uppercase tracking-widest text-[8px] lg:text-[10px]">Status:</span>
             <span className="text-emerald-400 font-bold text-[8px] lg:text-[10px]">AKTIF</span>
           </div>
-          <div className="hidden sm:flex items-center gap-1.5">
+          <div className="hidden sm:flex items-center gap-1.5 text-center">
             <span className="font-bold text-slate-500 uppercase tracking-widest text-[8px] lg:text-[10px]">Engine:</span>
-            <span className="text-blue-400 font-bold text-[8px] lg:text-[10px]">GEMINI 2.0 FLASH</span>
+            <span className="text-blue-400 font-bold text-[8px] lg:text-[10px]">GEMINI 1.5 FLASH</span>
           </div>
-          <div className="hidden lg:flex items-center gap-1.5">
+          <div className="hidden md:flex items-center gap-1.5">
             <span className="font-bold text-slate-500 uppercase tracking-widest text-[10px]">Regional:</span>
             <span className="text-white font-bold text-[10px]">ID (INDONESIA)</span>
           </div>

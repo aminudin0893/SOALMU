@@ -117,8 +117,8 @@ export function Sidebar({
   };
 
   return (
-    <aside className="w-full lg:w-80 border-r border-slate-200 bg-white flex flex-col h-full shrink-0">
-      <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
+    <aside className="w-full lg:w-96 border-r border-slate-200 bg-white flex flex-col h-full shrink-0">
+      <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-6 custom-scrollbar">
         
         {/* Toggle Mode */}
         <div className="space-y-4">
@@ -409,18 +409,18 @@ export function Sidebar({
         </div>
       </div>
 
-      <div className="p-6 bg-white border-t border-slate-200">
+      <div className="p-4 lg:p-6 bg-white border-t border-slate-200">
         <button
           onClick={onGenerate}
           disabled={isLoading || !apiKey}
-          className="w-full py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white rounded-lg font-bold uppercase tracking-wider text-xs shadow-lg shadow-blue-200 transition-all flex items-center justify-center gap-2 active:scale-[0.98]"
+          className="w-full py-4 lg:py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white rounded-xl font-bold uppercase tracking-wider text-[11px] lg:text-xs shadow-lg shadow-blue-200 transition-all flex items-center justify-center gap-2 active:scale-95"
         >
           {isLoading ? (
             <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
           ) : (
             <Zap className="w-4 h-4 fill-current" />
           )}
-          GENERATE SOAL AI
+          GENERATE SOAL SEKARANG
         </button>
       </div>
     </aside>

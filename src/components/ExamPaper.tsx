@@ -70,31 +70,52 @@ export function ExamPaper({ data, isLoading, viewMode, onViewModeChange }: ExamP
 
   const Letterhead = () => (
     <>
-      <div className="flex flex-col sm:row items-center gap-4 pb-2 mb-0">
-        {identity.logo ? (
-          <img src={identity.logo} alt="Logo" className="w-16 h-16 sm:w-[110px] sm:h-[110px] object-contain flex-shrink-0" />
-        ) : (
-          <div className="w-16 h-16 sm:w-[110px] sm:h-[110px] bg-slate-100 flex items-center justify-center text-slate-300 flex-shrink-0">
-            <GraduationCap className="w-8 h-8 sm:w-12 sm:h-12" />
-          </div>
-        )}
-        <div className="flex-1 text-center text-slate-900">
-          <h3 className="text-[10px] sm:text-[14px] font-bold uppercase leading-tight tracking-tight">MAJELIS PENDIDIKAN DASAR MENENGAH DAN PENDIDIKAN NON FORMAL</h3>
-          <h3 className="text-[10px] sm:text-[14px] font-bold uppercase leading-tight tracking-tight">PIMPINAN DAERAH MUHAMMADIYAH KOTA PROBOLINGGO</h3>
-          <h1 className="text-sm sm:text-xl font-black uppercase tracking-normal mt-1 mb-1">{identity.schoolName || 'SMP MUHAMMADIYAH 1 KOTA PROBOLINGGO'}</h1>
-          <p className="text-[10px] sm:text-[13px] font-bold uppercase mb-1">TERAKREDITASI A</p>
-          <div className="text-[8px] sm:text-[10px] font-medium leading-tight">
-            {identity.schoolAddress && <span>{identity.schoolAddress} </span>}
-            {identity.schoolEmail && <span>Email: <span className="text-blue-600 underline font-semibold">{identity.schoolEmail}</span> </span>}
-            <br />
-            {identity.schoolPhone && <span>Telp/fax. {identity.schoolPhone} </span>}
-            {identity.schoolWebsite && <span>Website: <span className="font-semibold">{identity.schoolWebsite}</span></span>}
+      <div className="flex items-center gap-4 pb-2 mb-0 print:flex-row relative">
+        <div className="flex-shrink-0 w-[15%] flex justify-center items-center">
+          {identity.logo ? (
+            <img 
+              src={identity.logo} 
+              alt="Logo" 
+              className="w-16 h-16 sm:w-24 sm:h-24 md:w-28 md:h-28 object-contain" 
+            />
+          ) : (
+            <div className="w-16 h-16 sm:w-24 sm:h-24 md:w-28 md:h-28 bg-slate-50 flex items-center justify-center text-slate-300 rounded-xl border border-slate-100">
+              <GraduationCap className="w-8 h-8 sm:w-12 sm:h-12" />
+            </div>
+          )}
+        </div>
+        
+        <div className="flex-1 text-center text-slate-900 space-y-0.5 pr-[5%]">
+          <h3 className="text-[10px] sm:text-xs md:text-[13px] font-bold uppercase tracking-tight leading-tight">
+            MAJELIS PENDIDIKAN DASAR MENENGAH DAN PENDIDIKAN NON FORMAL
+          </h3>
+          <h3 className="text-[10px] sm:text-xs md:text-[13px] font-bold uppercase tracking-tight leading-tight">
+            PIMPINAN DAERAH MUHAMMADIYAH KOTA PROBOLINGGO
+          </h3>
+          <h1 className="text-base sm:text-xl md:text-2xl font-black uppercase tracking-tight py-1">
+            {identity.schoolName || 'SMP MUHAMMADIYAH 1 KOTA PROBOLINGGO'}
+          </h1>
+          <p className="text-[10px] sm:text-xs md:text-[13px] font-bold uppercase tracking-[0.15em] mb-1">
+            <span className="px-2 py-0.5 border-x-2 border-slate-900">TERAKREDITASI A</span>
+          </p>
+          <div className="text-[8px] sm:text-[10px] md:text-[11px] font-medium leading-relaxed italic border-t border-transparent pt-1">
+            {identity.schoolAddress && <span className="block not-italic font-bold">{identity.schoolAddress}</span>}
+            <div className="flex flex-wrap justify-center gap-x-4 gap-y-0.5">
+              {identity.schoolEmail && <span className="flex items-center gap-1">Email: <span className="text-blue-700 underline font-semibold">{identity.schoolEmail}</span></span>}
+              {identity.schoolPhone && <span className="flex items-center gap-1">Telp/fax. <span className="font-semibold">{identity.schoolPhone}</span></span>}
+              {identity.schoolWebsite && <span className="flex items-center gap-1">Website: <span className="text-slate-800 font-bold">{identity.schoolWebsite}</span></span>}
+            </div>
           </div>
         </div>
+        
+        {/* Placeholder to keep center content perfectly centered */}
+        <div className="w-[10%] hidden md:block"></div>
       </div>
 
-      <div className="border-t-[1px] border-slate-900 mb-0.5"></div>
-      <div className="border-t-[3px] border-slate-900 mb-6"></div>
+      <div className="flex flex-col gap-[2px] mb-6 mt-1">
+        <div className="h-[3px] bg-slate-900 w-full" />
+        <div className="h-[1px] bg-slate-900 w-full" />
+      </div>
     </>
   );
 

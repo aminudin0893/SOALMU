@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import * as React from 'react';
 import { ExamData } from '../types';
 import { 
   Printer, 
@@ -64,10 +65,41 @@ export function ExamPaper({ data, isLoading, viewMode, onViewModeChange }: ExamP
     );
   }
 
-  const { identity, questions } = data;
+  const { identity, questions, kisiKisi } = data;
+  const [displayMode, setDisplayMode] = React.useState<'soal' | 'kisi-kisi'>('soal');
+
+  const Letterhead = () => (
+    <>
+      <div className="flex flex-col sm:row items-center gap-4 pb-2 mb-0">
+        {identity.logo ? (
+          <img src={identity.logo} alt="Logo" className="w-16 h-16 sm:w-[110px] sm:h-[110px] object-contain flex-shrink-0" />
+        ) : (
+          <div className="w-16 h-16 sm:w-[110px] sm:h-[110px] bg-slate-100 flex items-center justify-center text-slate-300 flex-shrink-0">
+            <GraduationCap className="w-8 h-8 sm:w-12 sm:h-12" />
+          </div>
+        )}
+        <div className="flex-1 text-center text-slate-900">
+          <h3 className="text-[10px] sm:text-[14px] font-bold uppercase leading-tight tracking-tight">MAJELIS PENDIDIKAN DASAR MENENGAH DAN PENDIDIKAN NON FORMAL</h3>
+          <h3 className="text-[10px] sm:text-[14px] font-bold uppercase leading-tight tracking-tight">PIMPINAN DAERAH MUHAMMADIYAH KOTA PROBOLINGGO</h3>
+          <h1 className="text-sm sm:text-xl font-black uppercase tracking-normal mt-1 mb-1">{identity.schoolName || 'SMP MUHAMMADIYAH 1 KOTA PROBOLINGGO'}</h1>
+          <p className="text-[10px] sm:text-[13px] font-bold uppercase mb-1">TERAKREDITASI A</p>
+          <div className="text-[8px] sm:text-[10px] font-medium leading-tight">
+            {identity.schoolAddress && <span>{identity.schoolAddress} </span>}
+            {identity.schoolEmail && <span>Email: <span className="text-blue-600 underline font-semibold">{identity.schoolEmail}</span> </span>}
+            <br />
+            {identity.schoolPhone && <span>Telp/fax. {identity.schoolPhone} </span>}
+            {identity.schoolWebsite && <span>Website: <span className="font-semibold">{identity.schoolWebsite}</span></span>}
+          </div>
+        </div>
+      </div>
+
+      <div className="border-t-[1px] border-slate-900 mb-0.5"></div>
+      <div className="border-t-[3px] border-slate-900 mb-6"></div>
+    </>
+  );
 
   return (
-    <div className="flex-1 overflow-y-auto bg-slate-50 p-4 md:p-6 lg:p-10 custom-scrollbar print:overflow-visible print:p-0 print:bg-white scroll-smooth">
+    <div className="flex-1 overflow-y-auto bg-slate-50 p-4 md:p-6 lg:p-10 custom-scrollbar print:overflow-visible print:p-0 print:bg-white scroll-smooth font-sans">
       <div className="max-w-4xl mx-auto space-y-6 md:space-y-10 print:max-w-none print:m-0 pb-40 lg:pb-10">
         
         {/* Actions bar - Card style inspired by Sentosaku */}
@@ -84,6 +116,31 @@ export function ExamPaper({ data, isLoading, viewMode, onViewModeChange }: ExamP
               
               <div className="h-8 w-px bg-slate-100 hidden md:block mx-2" />
               
+              <div className="flex bg-slate-100 p-1 rounded-2xl border border-slate-200 shadow-inner">
+                <button 
+                  onClick={() => setDisplayMode('soal')}
+                  className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                    displayMode === 'soal' 
+                      ? 'bg-white text-blue-600 shadow-md scale-[1.02]' 
+                      : 'text-slate-500 hover:text-slate-700'
+                  }`}
+                >
+                  Naskah Soal
+                </button>
+                <button 
+                  onClick={() => setDisplayMode('kisi-kisi')}
+                  className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                    displayMode === 'kisi-kisi' 
+                      ? 'bg-white text-blue-600 shadow-md scale-[1.02]' 
+                      : 'text-slate-500 hover:text-slate-700'
+                  }`}
+                >
+                  Kisi-Kisi
+                </button>
+              </div>
+
+              <div className="h-8 w-px bg-slate-100 hidden md:block mx-2" />
+
               <button 
                 onClick={() => onViewModeChange(viewMode === 'teacher' ? 'student' : 'teacher')}
                 className={`flex items-center gap-2.5 px-4 py-2 rounded-2xl text-xs font-bold transition-all active:scale-95 shadow-sm ${
@@ -120,6 +177,7 @@ export function ExamPaper({ data, isLoading, viewMode, onViewModeChange }: ExamP
         {/* Paper Container */}
         <div className="flex-1 flex flex-col items-center w-full">
           <motion.div 
+            key={displayMode}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             className="bg-white rounded-sm shadow-2xl p-6 md:p-12 flex flex-col border border-slate-200 relative w-full sm:w-[794px] mx-auto print:shadow-none print:border-none print:rounded-none print:p-0 print:w-full print:mx-0 print:block font-serif overflow-visible origin-top"
@@ -128,7 +186,7 @@ export function ExamPaper({ data, isLoading, viewMode, onViewModeChange }: ExamP
             @media print {
               @page {
                 size: A4;
-                margin: 20mm 15mm;
+                margin: 15mm 15mm;
               }
               body {
                 background: white !important;
@@ -145,104 +203,134 @@ export function ExamPaper({ data, isLoading, viewMode, onViewModeChange }: ExamP
                 break-inside: avoid;
                 page-break-inside: avoid;
               }
-              /* Ensure the main container doesn't restrict height */
               html, body, #root, main {
                 height: auto !important;
                 overflow: visible !important;
               }
             }
           `}</style>
-          {/* Reference Header Style (KOP) */}
-          <div className="flex flex-col sm:flex-row items-center gap-4 pb-2 mb-0">
-            {identity.logo ? (
-              <img src={identity.logo} alt="Logo" className="w-16 h-16 sm:w-[110px] sm:h-[110px] object-contain flex-shrink-0" />
-            ) : (
-              <div className="w-16 h-16 sm:w-[110px] sm:h-[110px] bg-slate-100 flex items-center justify-center text-slate-300 flex-shrink-0">
-                <GraduationCap className="w-8 h-8 sm:w-12 sm:h-12" />
+          
+          <Letterhead />
+
+          {displayMode === 'soal' ? (
+            <>
+              <h2 className="text-center font-bold text-base uppercase mb-4 tracking-normal">MATA PELAJARAN: {identity.subject}</h2>
+
+              <div className="bg-[#C5D1EB] border-2 border-slate-900 p-2.5 text-center mb-6 print:bg-[#C5D1EB]!">
+                <h2 className="text-sm font-black uppercase tracking-widest">{identity.examType || 'ASESMEN SUMATIF'}</h2>
               </div>
-            )}
-            <div className="flex-1 text-center text-slate-900">
-              <h3 className="text-[10px] sm:text-[14px] font-bold uppercase leading-tight tracking-tight">MAJELIS PENDIDIKAN DASAR MENENGAH DAN PENDIDIKAN NON FORMAL</h3>
-              <h3 className="text-[10px] sm:text-[14px] font-bold uppercase leading-tight tracking-tight">PIMPINAN DAERAH MUHAMMADIYAH KOTA PROBOLINGGO</h3>
-              <h1 className="text-sm sm:text-xl font-black uppercase tracking-normal mt-1 mb-1">{identity.schoolName || 'SMP MUHAMMADIYAH 1 KOTA PROBOLINGGO'}</h1>
-              <p className="text-[10px] sm:text-[13px] font-bold uppercase mb-1">TERAKREDITASI A</p>
-              <div className="text-[8px] sm:text-[10px] font-medium leading-tight">
-                {identity.schoolAddress && <span>{identity.schoolAddress} </span>}
-                {identity.schoolEmail && <span>Email: <span className="text-blue-600 underline font-semibold">{identity.schoolEmail}</span> </span>}
-                <br />
-                {identity.schoolPhone && <span>Telp/fax. {identity.schoolPhone} </span>}
-                {identity.schoolWebsite && <span>Website: <span className="font-semibold">{identity.schoolWebsite}</span></span>}
-              </div>
-            </div>
-          </div>
 
-          <div className="border-t-[1px] border-slate-900 mb-0.5"></div>
-          <div className="border-t-[3px] border-slate-900 mb-6"></div>
-
-          <h2 className="text-center font-bold text-base uppercase mb-4 tracking-normal">MATA PELAJARAN: {identity.subject}</h2>
-
-          <div className="bg-[#C5D1EB] border-2 border-slate-900 p-2.5 text-center mb-6">
-            <h2 className="text-sm font-black uppercase tracking-widest">{identity.examType || 'ASESMEN SUMATIF'}</h2>
-          </div>
-
-          {/* Student Info Table */}
-          <div className="grid grid-cols-1 sm:grid-cols-12 border-2 border-slate-900 mb-8 text-[11px] sm:text-[12px] font-bold">
-            <div className="col-span-1 sm:col-span-6 p-2 border-b-2 sm:border-b-0 sm:border-r-2 border-slate-900 flex items-center">
-              <span className="mr-2 shrink-0">Nama:</span>
-              <div className="flex-1 border-b border-dotted border-slate-400 h-4"></div>
-            </div>
-            <div className="col-span-1 sm:col-span-3 p-2 border-b-2 sm:border-b-0 sm:border-r-2 border-slate-900 flex items-center">
-              <span className="mr-2 shrink-0">Kelas:</span>
-              <div className="flex-1 border-b border-dotted border-slate-400 h-4"></div>
-            </div>
-            <div className="col-span-1 sm:col-span-3 p-2 flex items-center">
-              <span className="mr-2 shrink-0">Tanggal:</span>
-              <div className="flex-1 border-b border-dotted border-slate-400 h-4"></div>
-            </div>
-          </div>
-
-          <div className="mb-6">
-            <h3 className="text-[13px] font-black uppercase border-b border-slate-900 pb-1 mb-4">BAGIAN : PENILAIAN PILIHAN GANDA</h3>
-          </div>
-
-          <div className="flex-1 space-y-8">
-            {/* Questions Section */}
-            <div className="space-y-6">
-              {questions.map((q, idx) => (
-                <div key={idx} className="space-y-3 print-break-inside-avoid pb-4">
-                  <div className="flex items-start gap-4">
-                    <span className="text-sm font-bold text-slate-900 w-4 shrink-0">{idx + 1}.</span>
-                    <div className="prose prose-slate prose-sm max-w-none text-slate-900 font-normal leading-relaxed pr-8">
-                      <ReactMarkdown>{q.text}</ReactMarkdown>
-                    </div>
-                  </div>
-                  
-                  {q.options && q.options.length > 0 && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-2 pl-4 sm:pl-8 max-w-[600px]">
-                      {q.options.slice(0, 4).map((option, oIdx) => (
-                        <div key={oIdx} className="flex items-start gap-1 text-[13px] text-slate-900">
-                          <span className="font-normal shrink-0">{String.fromCharCode(65 + oIdx)}.</span>
-                          <span className="font-normal leading-tight">{option.replace(/^[A-E][.\)]\s*/i, '')}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Inline Key for Teacher Mode */}
-                  {viewMode === 'teacher' && (
-                    <div className="ml-8 mt-2 p-2 bg-blue-50 border border-blue-100 rounded text-[11px] font-bold text-blue-800 italic">
-                      Kunci Jawaban: {q.correctAnswer.charAt(0)}
-                    </div>
-                  )}
+              {/* Student Info Table */}
+              <div className="grid grid-cols-1 sm:grid-cols-12 border-2 border-slate-900 mb-8 text-[11px] sm:text-[12px] font-bold">
+                <div className="col-span-1 sm:col-span-6 p-2 border-b-2 sm:border-b-0 sm:border-r-2 border-slate-900 flex items-center">
+                  <span className="mr-2 shrink-0">Nama:</span>
+                  <div className="flex-1 border-b border-dotted border-slate-400 h-4"></div>
                 </div>
-              ))}
+                <div className="col-span-1 sm:col-span-3 p-2 border-b-2 sm:border-b-0 sm:border-r-2 border-slate-900 flex items-center">
+                  <span className="mr-2 shrink-0">Kelas:</span>
+                  <div className="flex-1 border-b border-dotted border-slate-400 h-4"></div>
+                </div>
+                <div className="col-span-1 sm:col-span-3 p-2 flex items-center">
+                  <span className="mr-2 shrink-0">Tanggal:</span>
+                  <div className="flex-1 border-b border-dotted border-slate-400 h-4"></div>
+                </div>
+              </div>
+
+              <div className="mb-6">
+                <h3 className="text-[13px] font-black uppercase border-b border-slate-900 pb-1 mb-4 text-center">NASKAH SOAL {identity.subject}</h3>
+              </div>
+
+              <div className="flex-1 space-y-8">
+                {/* Questions Section */}
+                <div className="space-y-6">
+                  {questions.map((q, idx) => (
+                    <div key={idx} className="space-y-3 print-break-inside-avoid pb-4">
+                      <div className="flex items-start gap-4">
+                        <span className="text-sm font-bold text-slate-900 w-4 shrink-0">{idx + 1}.</span>
+                        <div className="prose prose-slate prose-sm max-w-none text-slate-900 font-normal leading-relaxed pr-8">
+                          <ReactMarkdown>{q.text}</ReactMarkdown>
+                        </div>
+                      </div>
+                      
+                      {q.options && q.options.length > 0 && (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-2 pl-4 sm:pl-8 max-w-[600px]">
+                          {q.options.slice(0, 4).map((option, oIdx) => (
+                            <div key={oIdx} className="flex items-start gap-1 text-[13px] text-slate-900">
+                              <span className="font-normal shrink-0">{String.fromCharCode(65 + oIdx)}.</span>
+                              <span className="font-normal leading-tight">{option.replace(/^[A-E][.\)]\s*/i, '')}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Inline Key for Teacher Mode */}
+                      {viewMode === 'teacher' && (
+                        <div className="ml-8 mt-2 p-2 bg-blue-50 border border-blue-100 rounded text-[11px] font-bold text-blue-800 italic no-print">
+                          Kunci Jawaban: {q.correctAnswer.charAt(0)} | Level: {q.cognitiveLevel}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          ) : (
+            <div className="flex flex-col">
+              <h2 className="text-center font-black text-lg uppercase mb-2 tracking-normal">KISI-KISI ASESMEN SUMATIF</h2>
+              <h3 className="text-center font-bold text-sm uppercase mb-8 tracking-widest">{identity.subject} - KELAS {identity.grade}</h3>
+
+              <div className="overflow-x-auto">
+                <table className="w-full border-2 border-slate-900 border-collapse text-[11px] sm:text-[12px]">
+                  <thead>
+                    <tr className="bg-slate-100 print:bg-slate-100!">
+                      <th className="border-2 border-slate-900 p-2 text-center w-10">No</th>
+                      <th className="border-2 border-slate-900 p-2 text-center">Materi / Topik</th>
+                      <th className="border-2 border-slate-900 p-2 text-center">Indikator Soal</th>
+                      <th className="border-2 border-slate-900 p-2 text-center w-24">Level</th>
+                      <th className="border-2 border-slate-900 p-2 text-center w-16">No Soal</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {kisiKisi.map((k, idx) => (
+                      <tr key={idx} className="print-break-inside-avoid">
+                        <td className="border-2 border-slate-900 p-2 text-center">{idx + 1}</td>
+                        <td className="border-2 border-slate-900 p-2 font-medium">{k.topic}</td>
+                        <td className="border-2 border-slate-900 p-2 leading-tight">{k.indicator}</td>
+                        <td className="border-2 border-slate-900 p-2 text-center text-[10px] font-bold">{k.cognitiveLevel.split(' - ')[0]}</td>
+                        <td className="border-2 border-slate-900 p-2 text-center font-black">{k.questionNumber}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              <div className="mt-12 grid grid-cols-2 gap-20 text-center">
+                <div className="space-y-16">
+                  <div className="text-xs font-bold uppercase">
+                    Mengetahui,<br />
+                    Kepala Sekolah
+                  </div>
+                  <div className="font-black underline uppercase text-sm">
+                    {identity.schoolName ? 'KEPALA ' + identity.schoolName : '............................'}
+                  </div>
+                </div>
+                <div className="space-y-16">
+                  <div className="text-xs font-bold uppercase">
+                    Probolinggo, {new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}<br />
+                    Guru Mata Pelajaran
+                  </div>
+                  <div className="font-black underline uppercase text-sm">
+                    {identity.teacherName || '............................'}
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
+          )}
         </motion.div>
       </div>
+      </div>
     </div>
-  </div>
-);
+  );
 }
 
 // Dummy for icon
